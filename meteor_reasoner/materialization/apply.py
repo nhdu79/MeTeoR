@@ -81,6 +81,7 @@ def apply(literal, D, delta_old=None):
     Returns:
         A list of Interval instances.
     """
+
     if not isinstance(literal, BinaryLiteral) and (isinstance(literal, Atom) or
                                                    len(literal.operators) == 0):
 

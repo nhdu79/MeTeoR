@@ -143,8 +143,9 @@ def load_program(file_or_path):
         raise ValueError('The input should be a file path or a list of rule string')
 
     program = []
-    for line in rules:
-        rule = parse_rule(line)
+    for index, line in enumerate(rules):
+        rule_name = "R_" + str(index)
+        rule = parse_rule(line, rule_name=rule_name)
         program.append(rule)
 
     return program

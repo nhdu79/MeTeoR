@@ -1,4 +1,5 @@
 .idea
+.token
 __pycache__/
 .DS_Store
 *.egg-info
@@ -6,6 +7,7 @@ __pycache__/
 .eggs
 build/
 dist/
+env/
 examples/
 !experiments/
 experiments/*

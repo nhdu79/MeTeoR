@@ -24,9 +24,12 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
     literals = rule.body + rule.negative_body
 
     def ground_body(global_literal_index, delta, context):
+        # Last literal reached, head can be deduced
+        # TODO: 11/05 HERE
         if global_literal_index == len(literals):
             T = []
             for i in range(len(rule.body)):
+                # Exchange variable with constant
                 grounded_literal = copy.deepcopy(literals[i])
                 if isinstance(grounded_literal, BinaryLiteral):
                     grounded_literal.set_entity(delta[i])
@@ -34,12 +37,15 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                     if grounded_literal.get_predicate() not in ["Bottom", "Top"]:
                         grounded_literal.set_entity(delta[i][0])
                 t = apply(grounded_literal, D)
+                # dnh: grounded literals satisfy the body of the rule at times t
+                # i.e: head rule can be deduced at times t
                 if len(t) == 0:
                     break
                 else:
                     T.append(t)
                     if must_literals is not None:
                         must_literals[grounded_literal] += t
+            # dnh: so what does this do?
             n_T = []
             for i in range(len(rule.body), len(literals)):
                 grounded_literal = copy.deepcopy(literals[i])
@@ -54,6 +60,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                     break
                 else:
                     n_T.append(t)
+                    breakpoint()
                     if must_literals is not None:
                         must_literals[grounded_literal] += t
 
@@ -104,13 +111,19 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
 
         else:
             current_literal = copy.deepcopy(literals[global_literal_index])
+            # If NOT until/since
             if not isinstance(current_literal, BinaryLiteral):
+                # If bottom, top no context needed (exchanged var)
                 if current_literal.get_predicate() in ["Bottom", "Top"]:
                     ground_body(global_literal_index+1, delta, context)
+                # Else do go through each const to exchange with var
                 else:
+                    # Generate entity(const) and contexts(exchanged var)
                     for tmp_entity, tmp_context in ground_generator(current_literal, context, D, D_index):
+                        # Dict of exchanged var/const {literal_index: [consts]}
                         tmp_delata = {global_literal_index: [tmp_entity]}
                         ground_body(global_literal_index+1, {**delta, **tmp_delata}, {**context, **tmp_context})
+            # If until/since
             else:
                 left_predicate = current_literal.left_literal.get_predicate()
                 right_predicate = current_literal.right_literal.get_predicate()

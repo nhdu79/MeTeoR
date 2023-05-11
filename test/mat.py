@@ -32,15 +32,22 @@ from meteor_reasoner.utils.loader import load_dataset, load_program
 #     "R6(Y):-R5(Y), Boxminus[0,2]R4(Y),R1(X,Y)"
 # ]
 
-with open("./data/case_0_dataset.txt") as file:
+import os
+
+current_path = os.path.dirname(os.path.realpath(__file__))
+data_path = os.path.join(current_path, "data/case_0_dataset.txt")
+program_path = os.path.join(current_path, "data/case_0_program.txt")
+
+with open(data_path) as file:
     data = file.readlines()
-with open("./data/case_0_program.txt") as file:
+with open(program_path) as file:
     program = file.readlines()
 
 D = load_dataset(data)
 D_index = build_index(D)
 rules = load_program(program)
 for i in range(1,10):
+    print("=====================")
     print("Iteration:", i)
     print("=====================")
     print("Before D:")
@@ -52,7 +59,6 @@ for i in range(1,10):
     materialize(D, rules, K=1)
     print_dataset(D)
 
-
 # D= ["R1(c1,c2)@[0,1]", "R2(c1,c2)@[1,2]", "R3(c2,c3)@[2,3]", "R5(c2)@[0,1]"]
 # Program = [
 #     "R1(X,Y):- Diamondminus[1,1]R1(X,Y)",
@@ -61,22 +67,22 @@ for i in range(1,10):
 #     "R6(Y):-R5(Y), Boxminus[0,2]R4(Y),R1(X,Y)"
 # ]
 
-D = ["R1(c1,c2)@[0,1]"]
-Program = ["R1(X,Y):- Diamondminus[1,1]R1(X,Y)"]
-D = load_dataset(D)
-D_index = build_index(D)
-rules = load_program(Program)
-for i in range(1,4):
-    print("Iteration:", i)
-    print("=====================")
-    print("Before D:")
-    print_dataset(D)
-    print("Derived facts:")
-    delta_new = seminaive_immediate_consequence_operator(rules, D, D_index, delta_old=D)
-    print_dataset(delta_new)
-    print("After D:")
-    materialize(D, rules, K=1)
-    print_dataset(D)
+# D = ["R1(c1,c2)@[0,1]"]
+# Program = ["R1(X,Y):- Diamondminus[1,1]R1(X,Y)"]
+# D = load_dataset(D)
+# D_index = build_index(D)
+# rules = load_program(Program)
+# for i in range(1,4):
+#     print("Iteration:", i)
+#     print("=====================")
+#     print("Before D:")
+#     print_dataset(D)
+#     print("Derived facts:")
+#     delta_new = seminaive_immediate_consequence_operator(rules, D, D_index, delta_old=D)
+#     print_dataset(delta_new)
+#     print("After D:")
+#     materialize(D, rules, K=1)
+#     print_dataset(D)
 
 
 

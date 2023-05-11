@@ -3,7 +3,7 @@ class Rule:
     A rule instance consists of two part: a head (an Atom instance) and
     a body (a list of  Literal or BinarayLiteral Instances)
     """
-    def __init__(self, head, body, negative_body=[]):
+    def __init__(self, head, body, negative_body=[], name=""):
         """
 
         Args:
@@ -13,6 +13,7 @@ class Rule:
         self.head = head
         self.body = body  # a list of literal
         self.negative_body = negative_body # a list of literals
+        self.name = name
 
     def __str__(self):
         if len(self.negative_body) == 0:

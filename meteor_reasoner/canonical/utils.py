@@ -315,9 +315,12 @@ def find_periods(CR):
 
         if common_fragment.common is None or abs(CR.min_x - common_fragment.common.left_value) <= 2 * CR.w or abs(common_fragment.common.right_value - CR.max_x) <= 2 * CR.w:
             # add the new facts to the dataset
+            # TODO: 09/05
             for tmp_predicate in delta_new:
                 for tmp_entity in delta_new[tmp_predicate]:
                     if tmp_predicate not in CR.D or tmp_entity not in CR.D[tmp_predicate]:
+
+                        # breakpoint()
                         CR.D[tmp_predicate][tmp_entity] = CR.D[tmp_predicate][tmp_entity] + delta_new[tmp_predicate][tmp_entity]
                         # update index
                         for i, item in enumerate(tmp_entity):
@@ -330,6 +333,7 @@ def find_periods(CR):
                                     CR.D_index[tmp_predicate][
                                         str(i) + "@" + item1.name + "||" + str(j) + "@" + item2.name].append(tmp_entity)
                     elif tmp_predicate in CR.D and tmp_entity in CR.D[tmp_predicate]:
+                        # breakpoint()
                         CR.D[tmp_predicate][tmp_entity] += delta_new[tmp_predicate][tmp_entity]
             coalescing_d(CR.D)
             continue
