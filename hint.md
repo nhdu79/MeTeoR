@@ -18,3 +18,6 @@ pprint.pprint(<dict>)
 
 * Ground Body (method)
 Generate exchanged var with const using Ground Generator until last predicate, then Apply (method) generate intervals in which head rule can be deduced
+
+* Djsktra
+* For hypergraphs, find 1 node...

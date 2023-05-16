@@ -3,7 +3,7 @@ class CommonFragment:
         """
         Args:
             base_interval: [t_D^-, t_D^+]
-            common:
+            common: ????
             cr_flag:
         """
         self.base_interval = base_interval

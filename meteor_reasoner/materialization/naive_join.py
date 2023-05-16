@@ -47,6 +47,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                         must_literals[grounded_literal] += t
             # dnh: so what does this do?
             n_T = []
+            # dnh: Negative body go through
             for i in range(len(rule.body), len(literals)):
                 grounded_literal = copy.deepcopy(literals[i])
                 if isinstance(grounded_literal, BinaryLiteral):
@@ -60,7 +61,6 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                     break
                 else:
                     n_T.append(t)
-                    breakpoint()
                     if must_literals is not None:
                         must_literals[grounded_literal] += t
 
@@ -105,6 +105,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                         if must_literals is not None:
                             must_literals[tmp_head] += T
                         T = reverse_apply(tmp_head, tmp_D)
+                    # dnh: WRITE THIS TO SOMEWHERE
                     delta_new[head_predicate][replaced_head_entity] += T
                     if must_literals is not None:
                         must_literals[Atom(head_predicate, replaced_head_entity)] += T
@@ -122,6 +123,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                     for tmp_entity, tmp_context in ground_generator(current_literal, context, D, D_index):
                         # Dict of exchanged var/const {literal_index: [consts]}
                         tmp_delata = {global_literal_index: [tmp_entity]}
+                        breakpoint()
                         ground_body(global_literal_index+1, {**delta, **tmp_delata}, {**context, **tmp_context})
             # If until/since
             else:

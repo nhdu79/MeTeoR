@@ -6,8 +6,10 @@ from meteor_reasoner.classes.atom import Atom
 from meteor_reasoner.canonical.utils import fact_entailment
 from meteor_reasoner.utils.operate_dataset import print_dataset
 
-data = ["A(a)@1", "B(a)@[1,2]", "C@(1,2]"]
-program = ["A(X):-Diamondminus[1,2]A(X)", "D(X):- Boxminus[1,2]A(X), B(X)Since[1,2]C"]
+
+data = ["B(a)@1", "C(a)@1", "E(a)@1"]
+program = ["A(X):-B(X),C(X),not D(X), not E(X)"]
+
 D = load_dataset(data)
 Program = load_program(program)
 
@@ -38,7 +40,7 @@ else:
 print("=============================================")
 
 # Fact to check
-fact = "A(a)@10"
+fact = "A(a)@1"
 predicate, entity, interval = parse_str_fact(fact)
 FAKT = Atom(predicate, entity, interval)
 print("Entailment:", fact_entailment(D1, FAKT, common, left_period, left_len, right_period, right_len))
