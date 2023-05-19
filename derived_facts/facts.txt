@@ -1,0 +1,3 @@
+{'name': 'A(a)@1', 'from': {'rule': 'A(X):-B(X)', 'facts': ['B(a)@1']}}
+{'name': 'A(a)@1', 'from': {'rule': 'A(X):-B(X)', 'facts': ['B(a)@1']}}
+{'name': 'A(a)@1', 'from': {'rule': 'A(X):-B(X)', 'facts': ['B(a)@1']}}

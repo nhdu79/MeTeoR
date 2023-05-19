@@ -20,7 +20,7 @@ def random_return_name():
     return strname
 
 
-def parse_rule(line, rule_name=None):
+def parse_rule(line):
     """
     Parse a string-formed rule.
     Args:
@@ -66,7 +66,7 @@ def parse_rule(line, rule_name=None):
             literals.remove(literal)
     literals = sorted(literals, key=lambda item: len(item.get_entity()), reverse=True)
     ordered_literals = ordered_literals + literals
-    rule = Rule(head_atom, ordered_literals, negative_body=negative_body, name=rule_name)
+    rule = Rule(head_atom, ordered_literals, negative_body=negative_body)
     return rule
 
 

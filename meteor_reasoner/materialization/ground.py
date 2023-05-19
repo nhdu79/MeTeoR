@@ -63,6 +63,8 @@ def ground_generator(literal, context, D, D_index=None, delta_old=None, visited=
         if len(entity) == 1 and entity[0].name == "nan":
             yield entity, dict()
 
+        # dnh: 18/05
+        # Atom with no variable or has been replaced by constant
         elif not contain_variable(entity):
             if predicate in D and entity in D[predicate]:
                 yield entity, dict()
@@ -86,13 +88,15 @@ def ground_generator(literal, context, D, D_index=None, delta_old=None, visited=
                     if term.type == "constant":
                         index_str.append(str(i) + "@" + term.name)
                     else:
+                        # If context avaiable, replace variable with constant in context
                         if term.name in context:
                             index_str.append(str(i) + "@" + context[term.name])
-
                 index_str = "||".join(index_str)
+                # If nothing is replaced, generate entity and context from current D
                 if len(index_str) == 0:
                     for constant_entity in D[predicate]:
                         tmp_context = dict()
+                        # Replacing variable with constant
                         for term1, term2 in zip(entity, constant_entity):
                             if term1.type == "constant" and term1.name != term2.name:
                                 break
@@ -106,6 +110,7 @@ def ground_generator(literal, context, D, D_index=None, delta_old=None, visited=
                                 if term1.type == "variable":
                                     tmp_context[term1.name] = term2.name
                         else:
+                            # Yield the replcaed entity and context
                             yield constant_entity, tmp_context
                 else:
                     if index_str in D_index[predicate]:

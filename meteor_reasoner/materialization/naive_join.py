@@ -6,6 +6,8 @@ from meteor_reasoner.materialization.index_build import build_index
 from meteor_reasoner.utils.operate_dataset import print_dataset
 from meteor_reasoner.materialization.coalesce import coalescing_d
 
+from meteor_reasoner.utils.operate_dataset import print_dataset
+
 
 def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
     """
@@ -24,8 +26,6 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
     literals = rule.body + rule.negative_body
 
     def ground_body(global_literal_index, delta, context):
-        # Last literal reached, head can be deduced
-        # TODO: 11/05 HERE
         if global_literal_index == len(literals):
             T = []
             for i in range(len(rule.body)):
@@ -45,7 +45,6 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                     T.append(t)
                     if must_literals is not None:
                         must_literals[grounded_literal] += t
-            # dnh: so what does this do?
             n_T = []
             # dnh: Negative body go through
             for i in range(len(rule.body), len(literals)):
@@ -97,6 +96,8 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                     T = Interval.diff(T, exclude_t)
                 if len(T) != 0:
                     if not isinstance(rule.head, Atom):
+                        # If head doesn't occur in interval T yet
+                        # WTF is this?
                         tmp_D = defaultdict(lambda: defaultdict(list))
                         tmp_D[head_predicate][replaced_head_entity] = T
                         tmp_head = copy.deepcopy(rule.head)
@@ -105,7 +106,9 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                         if must_literals is not None:
                             must_literals[tmp_head] += T
                         T = reverse_apply(tmp_head, tmp_D)
-                    # dnh: WRITE THIS TO SOMEWHERE
+
+                    # dnh: 16/05
+                    # Head predicate (new facts) is derived at intervals T
                     delta_new[head_predicate][replaced_head_entity] += T
                     if must_literals is not None:
                         must_literals[Atom(head_predicate, replaced_head_entity)] += T
@@ -119,11 +122,10 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                     ground_body(global_literal_index+1, delta, context)
                 # Else do go through each const to exchange with var
                 else:
-                    # Generate entity(const) and contexts(exchanged var)
+                    # Generate entity(const) and contexts(exchanged var) from the dataset
                     for tmp_entity, tmp_context in ground_generator(current_literal, context, D, D_index):
                         # Dict of exchanged var/const {literal_index: [consts]}
                         tmp_delata = {global_literal_index: [tmp_entity]}
-                        breakpoint()
                         ground_body(global_literal_index+1, {**delta, **tmp_delata}, {**context, **tmp_context})
             # If until/since
             else:

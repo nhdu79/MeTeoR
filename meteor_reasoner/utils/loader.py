@@ -144,8 +144,7 @@ def load_program(file_or_path):
 
     program = []
     for index, line in enumerate(rules):
-        rule_name = "R_" + str(index)
-        rule = parse_rule(line, rule_name=rule_name)
+        rule = parse_rule(line)
         program.append(rule)
 
     return program
