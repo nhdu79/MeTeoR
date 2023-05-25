@@ -6,10 +6,8 @@ from meteor_reasoner.materialization.index_build import build_index
 from meteor_reasoner.utils.operate_dataset import print_dataset
 from meteor_reasoner.materialization.coalesce import coalescing_d
 
-from meteor_reasoner.utils.operate_dataset import print_dataset
 
-
-def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
+def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None):
     """
     This function implement the join operator when variables exist in the body of the rule.
     Args:
@@ -28,6 +26,10 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
     def ground_body(global_literal_index, delta, context):
         if global_literal_index == len(literals):
             T = []
+            atoms_with_interval = defaultdict(list)
+            '''
+            dnh: Go through all the literals in the body of the rule and apply MTL ops to literals
+            '''
             for i in range(len(rule.body)):
                 # Exchange variable with constant
                 grounded_literal = copy.deepcopy(literals[i])
@@ -36,7 +38,12 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                 else:
                     if grounded_literal.get_predicate() not in ["Bottom", "Top"]:
                         grounded_literal.set_entity(delta[i][0])
-                t = apply(grounded_literal, D)
+
+                if graph is not None:
+                    t = apply(grounded_literal, D, atoms_with_interval=atoms_with_interval)
+                else:
+                    t = apply(grounded_literal, D)
+
                 # dnh: grounded literals satisfy the body of the rule at times t
                 # i.e: head rule can be deduced at times t
                 if len(t) == 0:
@@ -46,7 +53,6 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                     if must_literals is not None:
                         must_literals[grounded_literal] += t
             n_T = []
-            # dnh: Negative body go through
             for i in range(len(rule.body), len(literals)):
                 grounded_literal = copy.deepcopy(literals[i])
                 if isinstance(grounded_literal, BinaryLiteral):
@@ -80,13 +86,13 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                             else:
                                 new_term = Term.new_term(context[term.name])
                                 replaced_head_entity.append(new_term)
-
                     replaced_head_entity = tuple(replaced_head_entity)
                 else:
                     replaced_head_entity = head_entity
             except:
                 print("hello")
 
+            # If all literals appear in some time interval (T)
             if len(T) == len(literals):
                 T = interval_merge(T)
                 exclude_t = []
@@ -94,10 +100,10 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
                     exclude_t = interval_merge([T, n_T])
                 if len(exclude_t) != 0:
                     T = Interval.diff(T, exclude_t)
+                # If all literals appear TOGETHER in some time interval (T)
                 if len(T) != 0:
+                    # If head doesn't have temporal operator
                     if not isinstance(rule.head, Atom):
-                        # If head doesn't occur in interval T yet
-                        # WTF is this?
                         tmp_D = defaultdict(lambda: defaultdict(list))
                         tmp_D[head_predicate][replaced_head_entity] = T
                         tmp_head = copy.deepcopy(rule.head)
@@ -105,11 +111,39 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None):
 
                         if must_literals is not None:
                             must_literals[tmp_head] += T
+                        # dnh 23/05 :Doesn't this contradict the condition on 103?
+                        # Head only allowed Box
+                        # If has temporal operator, go back with t
                         T = reverse_apply(tmp_head, tmp_D)
 
-                    # dnh: 16/05
-                    # Head predicate (new facts) is derived at intervals T
+                    if graph is not None:
+                        succ = []
+                        for interval in T:
+                            atom = Atom(head_predicate, entity=replaced_head_entity, interval=interval).__str__()
+                            succ.append(atom)
+
+                        pred = []
+                        for lit, intv in atoms_with_interval.items():
+                            predicate = lit.get_predicate()
+                            entity = lit.get_entity()
+                            if isinstance(intv, list):
+                                for interval in intv:
+                                    atom = Atom(predicate, entity=entity, interval=interval).__str__()
+                                    pred.append(atom)
+                            else:
+                                breakpoint()
+
+                        el = {
+                            "succ": succ,
+                            "edge": rule.__str__(),
+                            "pred": pred
+                        }
+                        if el not in graph:
+                            graph.append(el)
+
                     delta_new[head_predicate][replaced_head_entity] += T
+                    # dnh: 23/05
+                    # ????
                     if must_literals is not None:
                         must_literals[Atom(head_predicate, replaced_head_entity)] += T
 

@@ -294,6 +294,7 @@ class Interval:
         Returns:
             boolean
         """
+        # Open is "(", closed is "["
         if left_value == right_value and left_open and right_open:
             return False
         elif left_value > right_value:

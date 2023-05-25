@@ -30,9 +30,3 @@ Generate exchanged var with const using Ground Generator until last predicate, t
         { rule: "A(X):-C(X)" facts: ["C(a)"] }
     ]
 }
-
-
-
-
-
-

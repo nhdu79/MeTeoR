@@ -7,10 +7,14 @@ from meteor_reasoner.canonical.calculate_w import get_w
 
 
 class CanonicalRepresentation:
-    def __init__(self, D, Program):
+    def __init__(self, D, Program, glassbox=False):
         self.D = D
         self.D_index = defaultdict(lambda : defaultdict(list))
         self.Program = Program
+        if glassbox:
+            self.G = []
+        else:
+            self.G = None
 
     def is_bounded_program(self):
         for rule in self.Program:

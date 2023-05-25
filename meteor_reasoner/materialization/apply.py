@@ -71,7 +71,7 @@ def until_deduce(literal, left_interval, right_interval):
         return interval
 
 
-def apply(literal, D, delta_old=None):
+def apply(literal, D, delta_old=None, atoms_with_interval=None):
     """
     Apply MTL operator(s) to a literal.
     Args:
@@ -84,18 +84,24 @@ def apply(literal, D, delta_old=None):
 
     if not isinstance(literal, BinaryLiteral) and (isinstance(literal, Atom) or
                                                    len(literal.operators) == 0):
-
+        # If no temporal ops
         predicate = literal.get_predicate()
         entity = literal.get_entity()
         if entity: # not None
             if predicate in D and entity in D[predicate]:
+                # dnh: 23/05 What does this do???
                 if delta_old is not None and predicate in delta_old and entity in delta_old[predicate]:
                     full_intervals = copy.deepcopy(D[predicate][entity])
                     for remove_interval in delta_old[predicate][entity]:
                         full_intervals.remove(remove_interval)
                     return full_intervals
+                # Always land here
                 else:
-                    return D[predicate][entity]
+                    T = D[predicate][entity]
+                    if atoms_with_interval is not None:
+                        atoms_with_interval[literal].extend(T)
+
+                    return T
             else:
                 return []
 
@@ -141,11 +147,14 @@ def apply(literal, D, delta_old=None):
             return T
 
         else:
+            # dnh: 25/05
+            # Pop the first operator/ but theoretically it can be nested?
             pop_operator = literal.operators.pop(0)
             T0 = apply(literal, D)
             literal.operators.insert(0, pop_operator)
             T = []
             if op_name == "Diamondminus":
+                rule = "add"
                 for t0 in T0:
                   interval = Interval.add(t0, literal.operators[0].interval)
                   if Interval.is_valid_interval(interval.left_value, interval.right_value,
@@ -153,17 +162,30 @@ def apply(literal, D, delta_old=None):
                       T.append(interval)
             elif op_name == "Boxminus":
                 for t0 in T0:
-                  interval = Interval.circle_add(t0, literal.operators[0].interval)
+                  roh_1 = t0
+                  roh_2 = literal.operators[0].interval
+                  interval = Interval.circle_add(roh_1, roh_2)
                   if Interval.is_valid_interval(interval.left_value, interval.right_value,
                                                 interval.left_open, interval.right_open):
                       T.append(interval)
+                      if atoms_with_interval is not None:
+                        r = {
+                            "rule": "circle_add",
+                            "roh_1": roh_1,
+                            "roh_2": roh_2,
+                            "interval": interval
+                        }
+                        atoms_with_interval[literal].append(r)
+                        breakpoint()
             elif op_name == "Diamondplus":
+                rule = "sub"
                 for t0 in T0:
                   interval = Interval.sub(t0, literal.operators[0].interval)
                   if Interval.is_valid_interval(interval.left_value, interval.right_value,
                                                 interval.left_open, interval.right_open):
                       T.append(interval)
             elif op_name == "Boxplus":
+                rule = "circle_sub"
                 for t0 in T0:
                   interval = Interval.circle_sub(t0, literal.operators[0].interval)
                   if Interval.is_valid_interval(interval.left_value, interval.right_value,

@@ -4,57 +4,44 @@ from meteor_reasoner.utils.loader import load_dataset, load_program
 from meteor_reasoner.utils.parser import parse_str_fact
 from meteor_reasoner.classes.atom import Atom
 from meteor_reasoner.canonical.utils import fact_entailment
+from meteor_reasoner.utils.operate_dataset import print_dataset
 
 class Glassbox:
-    def __init__(self, data, program, K=100, mode="naive"):
+    def __init__(self, data, program, fact):
+        self.fact = fact
         self.data = data
         self.program = program
-        self.mode = mode
-        self.graph = {
-            "vertices": [],
-            "edges": [],
-        }
-        self.K = K
+        self.logs = []
 
     def initialize(self):
-        if self.mode == "naive":
-            self.naive_materialize()
-        elif self.mode == "seminaive":
-            self.seminaive_materialize()
+        self.D = load_dataset(self.data)
+        self.Program = load_program(self.program)
+        self.CR = CanonicalRepresentation(self.D, self.Program)
+        self.CR.initialize()
+        predicate, entity, interval = parse_str_fact(fact)
+        self.FAKT = Atom(predicate, entity, interval)
+
+    def check_for_entailment(self):
+        self.initialize()
+        D1, common, varrho_left, left_period, left_len, varrho_right, right_period, right_len = find_periods(self.CR)
+
+        if varrho_left is None and varrho_right is None:
+            print("This program is finitely materialisable for this dataset.")
+            print_dataset(D1)
         else:
-            raise Exception("Invalid mode")
-
-    def naive_materialize(self):
-        k = 0
-        D_index = build_index(D)
-        delta_old = D
-
-        while k < self.K:
-            k += 1
-            delta_new = naive_immediate_consequence_operator(rules, D, D_index)
-            if logger is not None:
-                delta_old = defaultdict(lambda: defaultdict(list))
-                fixpoint = seminaive_combine(D, delta_new, delta_old, D_index)
-                coalescing_d(delta_new)
-                number_of_redundant_facts = calculate_redundancy(delta_new, delta_old)
-                total_number = 0
-                for predicate in D:
-                    for entity in D[predicate]:
-                        total_number += len(D[predicate][entity])
-                logger.info("Iteration={}, t={}, D={}, n={}".format(k, time.time() - start_time - calc_time, total_number, number_of_redundant_facts))
+            if varrho_left is not None:
+                print("left period:", str(varrho_left))
+                for key, values in left_period.items():
+                    print(str(key), [str(val) for val in values])
             else:
-                fixpoint = naive_combine(D, delta_new, D_index)
-            if fixpoint:
-                return True
+                print("left period:", "[" + str(self.CR.base_interval.left_value - self.CR.w) + "," + str(self.CR.base_interval.left_value), ")")
 
-        return False
+            if varrho_right is not None:
+                print("right period:", str(varrho_right))
+                for key, values in right_period.items():
+                    print(str(key), [str(val) for val in values])
+            else:
+                print("right period:", "(" + str(self.CR.base_interval.right_value), "," +  str(self.CR.base_interval.right_value + self.CR.w) + "]")
 
-
-
-
-
-
-
-
-
+        print("Entailment:", fact_entailment(D1, self.FAKT, common, left_period, left_len, right_period, right_len))
 

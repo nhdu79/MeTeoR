@@ -267,7 +267,11 @@ def find_periods(CR):
         common_fragment = CommonFragment(CR.base_interval)
         common_fragment.common = Interval(Decimal("-inf"), Decimal("+inf"), True, True)
 
-        delta_new = naive_immediate_consequence_operator(D=CR.D, rules=CR.Program, D_index=CR.D_index)
+        if CR.G is not None:
+            delta_new = naive_immediate_consequence_operator(D=CR.D, rules=CR.Program, D_index=CR.D_index, graph=CR.G)
+        else:
+            delta_new = naive_immediate_consequence_operator(D=CR.D, rules=CR.Program, D_index=CR.D_index)
+
         number_mat += 1
         diff_delta = []
         terminate_flag = False

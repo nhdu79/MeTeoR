@@ -110,7 +110,7 @@ def ground_generator(literal, context, D, D_index=None, delta_old=None, visited=
                                 if term1.type == "variable":
                                     tmp_context[term1.name] = term2.name
                         else:
-                            # Yield the replcaed entity and context
+                            # Yield the replaced entity and context
                             yield constant_entity, tmp_context
                 else:
                     if index_str in D_index[predicate]:
