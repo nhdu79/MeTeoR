@@ -169,6 +169,8 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None):
                                                 interval.left_open, interval.right_open):
                       T.append(interval)
                       if atoms_with_interval is not None:
+                        # Boxminus at interval holds
+                        # Intermediate step
                         r = {
                             "rule": "circle_add",
                             "roh_1": roh_1,
@@ -176,7 +178,6 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None):
                             "interval": interval
                         }
                         atoms_with_interval[literal].append(r)
-                        breakpoint()
             elif op_name == "Diamondplus":
                 rule = "sub"
                 for t0 in T0:

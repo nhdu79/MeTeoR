@@ -23,6 +23,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
     head_predicate = rule.head.get_predicate()
     literals = rule.body + rule.negative_body
 
+
     def ground_body(global_literal_index, delta, context):
         if global_literal_index == len(literals):
             T = []
@@ -39,6 +40,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                     if grounded_literal.get_predicate() not in ["Bottom", "Top"]:
                         grounded_literal.set_entity(delta[i][0])
 
+                # Operators are popped here
                 if graph is not None:
                     t = apply(grounded_literal, D, atoms_with_interval=atoms_with_interval)
                 else:
@@ -94,7 +96,10 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
 
             # If all literals appear in some time interval (T)
             if len(T) == len(literals):
+                # dnh: 26/05 new rule for interval merge intersection rule generalization
+                # Tbefore = ?
                 T = interval_merge(T)
+                # Tafter = ?
                 exclude_t = []
                 if len(T) != 0 and len(n_T) != 0:
                     exclude_t = interval_merge([T, n_T])
@@ -131,7 +136,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                                     atom = Atom(predicate, entity=entity, interval=interval).__str__()
                                     pred.append(atom)
                             else:
-                                breakpoint()
+                                pass
 
                         el = {
                             "succ": succ,
