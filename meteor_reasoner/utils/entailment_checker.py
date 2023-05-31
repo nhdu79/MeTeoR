@@ -14,6 +14,7 @@ def entailment_check(data, program, fact, glassbox=False):
     CR.initilization()
 
     D1, common, varrho_left, left_period, left_len, varrho_right, right_period, right_len = find_periods(CR)
+
     if varrho_left is None and varrho_right is None:
         print("This program is finitely materialisable for this dataset.")
         # print_dataset(D1)
@@ -39,9 +40,10 @@ def entailment_check(data, program, fact, glassbox=False):
     print("Entailment:", entailment)
 
     if glassbox and entailment:
-        print("Graph:", CR.G)
+        # print("Graph:", CR.G)
+        for el in CR.G:
+            print(el["succ"], ":", el["rule"], ":", el["pred"])
+            print("====================================")
         return CR.G
 
     return entailment
-
-

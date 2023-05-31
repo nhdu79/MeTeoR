@@ -45,7 +45,6 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                     t = apply(grounded_literal, D, atoms_with_interval=atoms_with_interval)
                 else:
                     t = apply(grounded_literal, D)
-
                 # dnh: grounded literals satisfy the body of the rule at times t
                 # i.e: head rule can be deduced at times t
                 if len(t) == 0:
@@ -97,9 +96,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
             # If all literals appear in some time interval (T)
             if len(T) == len(literals):
                 # dnh: 26/05 new rule for interval merge intersection rule generalization
-                # Tbefore = ?
                 T = interval_merge(T)
-                # Tafter = ?
                 exclude_t = []
                 if len(T) != 0 and len(n_T) != 0:
                     exclude_t = interval_merge([T, n_T])
@@ -107,7 +104,40 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                     T = Interval.diff(T, exclude_t)
                 # If all literals appear TOGETHER in some time interval (T)
                 if len(T) != 0:
-                    # If head doesn't have temporal operator
+                    if graph is not None:
+                        for interval in T:
+                            el = defaultdict(list)
+                            # Succ
+                            # dnh 31/05: If head has temporal, write out... ?? for reverse_apply later
+                            # if isinstance(rule.head, Atom):
+                            if rule.head.get_op_name() is None:
+                                a_succ = Atom(head_predicate, entity=replaced_head_entity, interval=interval).__str__()
+                            else:
+                                alpha = copy.deepcopy(rule.head)
+                                alpha.set_entity(replaced_head_entity)
+                                a_succ = { "alpha": alpha.__str__(), "interval": interval.__str__() }
+
+                            el["succ"] = a_succ
+                            el["rule"] = rule.__str__()
+                            for lit, intvs in atoms_with_interval.items():
+                                # Pred
+                                for intv in intvs:
+                                    # Intermediate step
+                                    if isinstance(intv, dict):
+                                        s_intv = Interval.intersection(intv['interval'], interval)
+                                        if s_intv is not None:
+                                            a_pred = lit.__str__()
+                                            r_str = {k: v.__str__() for k, v in intv.items()}
+                                            el["pred"].append({ a_pred: r_str })
+                                    else:
+                                        s_intv = Interval.intersection(intv, interval)
+                                        if s_intv is not None:
+                                            a_pred = Atom(lit.get_predicate(), entity=lit.get_entity(), interval=intv).__str__()
+                                            el["pred"].append(a_pred)
+
+                            if el not in graph:
+                                graph.append(el)
+
                     if not isinstance(rule.head, Atom):
                         tmp_D = defaultdict(lambda: defaultdict(list))
                         tmp_D[head_predicate][replaced_head_entity] = T
@@ -116,39 +146,26 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
 
                         if must_literals is not None:
                             must_literals[tmp_head] += T
-                        # dnh 23/05 :Doesn't this contradict the condition on 103?
-                        # Head only allowed Box
-                        # If has temporal operator, go back with t
-                        T = reverse_apply(tmp_head, tmp_D)
 
-                    if graph is not None:
-                        succ = []
-                        for interval in T:
-                            atom = Atom(head_predicate, entity=replaced_head_entity, interval=interval).__str__()
-                            succ.append(atom)
+                        atoms_with_interval = defaultdict(list)
+                        T = reverse_apply(tmp_head, tmp_D, atoms_with_interval=atoms_with_interval)
+                        if graph is not None:
+                            for interval in T:
+                                el = defaultdict(list)
+                                for lit, intvs in atoms_with_interval.items():
 
-                        pred = []
-                        for lit, intv in atoms_with_interval.items():
-                            predicate = lit.get_predicate()
-                            entity = lit.get_entity()
-                            if isinstance(intv, list):
-                                for interval in intv:
-                                    atom = Atom(predicate, entity=entity, interval=interval).__str__()
-                                    pred.append(atom)
-                            else:
-                                pass
-
-                        el = {
-                            "succ": succ,
-                            "edge": rule.__str__(),
-                            "pred": pred
-                        }
-                        if el not in graph:
-                            graph.append(el)
+                                    for intv in intvs:
+                                        s_intv = Interval.intersection(intv['interval'], interval)
+                                        if intv['interval'] == interval:
+                                            a_succ = Atom(intv['alpha'].get_predicate(), entity=intv['alpha'].get_entity(), interval=intv['interval']).__str__()
+                                            el["succ"] = a_succ
+                                            el["rule"] = intv['rule']
+                                            el["pred"] = { "alpha": lit.__str__(), "interval": intv["roh_1"].__str__() }
+                                if el not in graph and isinstance(el["pred"], dict):
+                                    graph.append(el)
 
                     delta_new[head_predicate][replaced_head_entity] += T
-                    # dnh: 23/05
-                    # ????
+                    # dnh: Used only in some experiments
                     if must_literals is not None:
                         must_literals[Atom(head_predicate, replaced_head_entity)] += T
 

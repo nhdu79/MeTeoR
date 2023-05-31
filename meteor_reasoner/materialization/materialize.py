@@ -61,6 +61,7 @@ def seminaive_combine(D, delta_new, delta_old, D_index=None):
     return fixpoint
 
 
+# dnh 31/05: Coalescing for union of intervals
 def naive_combine(D, delta_new, D_index=None):
     fixpoint = True
     for head_predicate in delta_new:
@@ -171,11 +172,11 @@ def opt_materialize(D, rules, D_index, delta_old, K=1, logger=None):
                 right_atom = body_atom.right_literal
                 if left_atom.get_predicate() not in non_predicates or right_atom.get_predicate() not in non_predicates:
                     r_program.append(rule)
-                    break  
+                    break
             else:
                 if body_atom.get_predicate() not in non_predicates:
                     r_program.append(rule)
-                    break 
+                    break
         else:
              nr_program.append(rule)
     flag = 0
