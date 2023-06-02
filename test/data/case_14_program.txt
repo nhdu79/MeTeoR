@@ -1,2 +1,2 @@
-A:-Diamondminus[0,1]A
-A:-Diamondplus[0,1]A
+A:-Diamondplus[0,10]A
+A:-Diamondminus[0,5]Diamondminus[0,5]A

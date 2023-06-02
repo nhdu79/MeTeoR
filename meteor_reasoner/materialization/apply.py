@@ -171,6 +171,7 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None):
         else:
             # Find out where the atom behind the operator occurs in D
             pop_operator = literal.operators.pop(0)
+            # dnh 02/06 Nested temporal operators
             T0 = apply(literal, D)
             alpha = copy.deepcopy(literal)
             literal.operators.insert(0, pop_operator)

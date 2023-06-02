@@ -321,6 +321,7 @@ def find_periods(CR):
                 for tmp_entity in delta_new[tmp_predicate]:
                     if tmp_predicate not in CR.D or tmp_entity not in CR.D[tmp_predicate]:
 
+                        # dnh 02/06: ??????
                         CR.D[tmp_predicate][tmp_entity] = CR.D[tmp_predicate][tmp_entity] + delta_new[tmp_predicate][tmp_entity]
                         # update index
                         for i, item in enumerate(tmp_entity):
@@ -335,6 +336,7 @@ def find_periods(CR):
                     elif tmp_predicate in CR.D and tmp_entity in CR.D[tmp_predicate]:
                         CR.D[tmp_predicate][tmp_entity] += delta_new[tmp_predicate][tmp_entity]
             if CR.G is not None:
+                # print("111111111111111111")
                 coalescing_d(CR.D, graph=CR.G)
             else:
                 coalescing_d(CR.D)
@@ -357,6 +359,7 @@ def find_periods(CR):
                     for value in values:
                         right_period[value].append(key)
                 for key, value in right_period.items():
+                    # print("22222222222222222")
                     right_period[key] = coalescing(value)
 
                 return CR.D, common_fragment.common, None, None, None, varrho_right, right_period, right_len
@@ -369,6 +372,7 @@ def find_periods(CR):
                         for value in values:
                             left_period[value].append(key)
                     for key, value in left_period.items():
+                        # print("333333333333333333")
                         left_period[key] = coalescing(value)
                     return CR.D, common_fragment.common, varrho_left, left_period, left_len, None, None, None
 
@@ -380,6 +384,7 @@ def find_periods(CR):
                             for value in values:
                                 left_period[value].append(key)
                         for key, value in left_period.items():
+                            # print("444444444444444444")
                             left_period[key] = coalescing(value)
 
                         right_len = varrho_right.right_value - varrho_right.left_value
@@ -387,6 +392,7 @@ def find_periods(CR):
                             for value in values:
                                 right_period[value].append(key)
                         for key, value in right_period.items():
+                            # print("555555555555555555")
                             right_period[key] = coalescing(value)
                         return CR.D, common_fragment.common, varrho_left, left_period, left_len, varrho_right, right_period, right_len
 
@@ -406,10 +412,14 @@ def find_periods(CR):
                                     str(i) + "@" + item1.name + "||" + str(j) + "@" + item2.name].append(tmp_entity)
                 elif tmp_predicate in CR.D and tmp_entity in CR.D[tmp_predicate]:
                     CR.D[tmp_predicate][tmp_entity] += delta_new[tmp_predicate][tmp_entity]
-        coalescing_d(CR.D)
+        if CR.G is not None:
+            # print("666666666666666666666")
+            coalescing_d(CR.D, graph=CR.G)
+        else:
+            coalescing_d(CR.D)
 
 
-def fact_entailment(D, fact, base_interval, left_period, left_len, right_period, right_len):
+def fact_entailment(D, fact, base_interval, left_period, left_len, right_period, right_len, graph=None):
     if fact.predicate not in D:
         return False
     else:
@@ -419,6 +429,14 @@ def fact_entailment(D, fact, base_interval, left_period, left_len, right_period,
             intervals = D[fact.predicate][fact.entity]
             for interval in intervals:
                 if Interval.inclusion(fact.interval, interval):
+                    if graph is not None:
+                        atom = Atom(fact.predicate, entity=fact.entity, interval=interval)
+                        el = {
+                            "succ": fact.__str__(),
+                            "rule": "inclusion",
+                            "pred": atom.__str__(),
+                        }
+                        graph.append(el)
                     return True
             else:
                 if Interval.inclusion(fact.interval, base_interval):

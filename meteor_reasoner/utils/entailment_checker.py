@@ -36,7 +36,7 @@ def entailment_check(data, program, fact, glassbox=False):
     # Fact to check
     predicate, entity, interval = parse_str_fact(fact)
     FAKT = Atom(predicate, entity, interval)
-    entailment = fact_entailment(D1, FAKT, common, left_period, left_len, right_period, right_len)
+    entailment = fact_entailment(D1, FAKT, common, left_period, left_len, right_period, right_len, graph=CR.G)
     print("Entailment:", entailment)
 
     if glassbox and entailment:

@@ -18,14 +18,14 @@ class Interval:
         self.right_open = right_open
 
     @staticmethod
-    def list_union(intervals1, intervals2):
+    def list_union(intervals1, intervals2):# {{{
         intervals1.sort(key=lambda k: k.left_value)
         intervals2.sort(key=lambda k: k.left_value)
         new_interval_list = []
         if intervals1[0].left_value < intervals2[0].left_value:
             for interval1 in intervals1:
                 for interval2 in intervals2:
-                    if interval2.left_value > interval1.right_value:
+                    if interval2.left_value > interval1.right_value:# }}}
                         break
                     tmp_interval = Interval.intersection(interval1, interval2)
                     if tmp_interval is not None:

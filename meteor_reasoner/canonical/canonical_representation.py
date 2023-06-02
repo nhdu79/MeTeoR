@@ -31,7 +31,7 @@ class CanonicalRepresentation:
     def initilization(self):
         t_program = copy.deepcopy(self.Program)
         self.w = 2 * get_w(t_program)
-        coalescing_d(self.D)
+        coalescing_d(self.D, graph=self.G)
         build_index(self.D,  self.D_index)
         self.points, self.min_x, self.max_x = get_dataset_points_x(self.D, min_x_flag=True)
 
