@@ -1,4 +1,5 @@
 [x] Rules at the end for deriving the atom
 [x] Fix colaesce
-[ ] Split Temporal rules into 2
-[ ] Nested rules
+[x] Split Temporal rules into 2
+[x] Nested rules
+[ ] Edge case where interval-borders meet

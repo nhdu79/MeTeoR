@@ -1,9 +1,7 @@
 from meteor_reasoner.utils.entailment_checker import entailment_check
 
-data = ["C(a)@1","B(a)@[1,2]","C(a)@2",
-        "D(a)@[1,2]", "D(a)@[1,3]",
-        "D(a)@[2,3]"]
-program = ["A(X):-B(X), C(X)"]
+data = ["B(a)@[1,2]", "C(a)@1"]
+program = ["A(X):- Boxminus[1,1]Boxplus[1,2]B(X), C(X)"]
 fact = "A(a)@1"
 
 # data = ["A(a)@1", "C(a)@1"]

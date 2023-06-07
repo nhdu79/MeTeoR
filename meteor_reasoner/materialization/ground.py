@@ -63,8 +63,6 @@ def ground_generator(literal, context, D, D_index=None, delta_old=None, visited=
         if len(entity) == 1 and entity[0].name == "nan":
             yield entity, dict()
 
-        # dnh: 18/05
-        # Atom with no variable or has been replaced by constant
         elif not contain_variable(entity):
             if predicate in D and entity in D[predicate]:
                 yield entity, dict()
