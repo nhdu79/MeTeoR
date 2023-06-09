@@ -139,8 +139,10 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                                 for intv in intvs:
                                     # Intermediate step
                                     if isinstance(intv, dict):
-                                        s_intv = Interval.intersection(intv['interval'], interval)
-                                        if s_intv is not None:
+                                        # s_intv = Interval.intersection(intv['interval'], interval)
+
+                                        s_intv = Interval.inclusion(interval, intv['interval'])
+                                        if s_intv:
                                             # dnh: 07/06: EDGECASE nr8 where intervals overlap at borders
                                             # if rule.__str__() == "A(X):-Diamondminus[3,4]A(X)" and intv["interval"].__str__() == "[9,25]":
                                             #     breakpoint()
@@ -151,8 +153,9 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                                             else:
                                                 el["pred"].append({ "alpha": a_pred, "interval": intv["interval"].__str__() })
                                     else:
-                                        s_intv = Interval.intersection(intv, interval)
-                                        if s_intv is not None:
+                                        # s_intv = Interval.intersection(intv, interval)
+                                        s_intv = Interval.inclusion(interval, intv)
+                                        if s_intv:
                                             a_pred = Atom(lit.get_predicate(), entity=lit.get_entity(), interval=intv).__str__()
                                             el["pred"].append(a_pred)
                             if el not in graph:

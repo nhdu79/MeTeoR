@@ -2,4 +2,9 @@
 [x] Fix colaesce
 [x] Split Temporal rules into 2
 [x] Nested rules
-[ ] Edge case where interval-borders meet
+[x] Edge case where interval-borders meet
+[ ] Nested rules for head
+[ ] Change name rules to ops
+[ ] Mb Tests but after the algorithm
+
+
