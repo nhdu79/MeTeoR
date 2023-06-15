@@ -121,12 +121,12 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
             if left_literal.get_predicate() == "Top":
                 T1 = [Interval(float('-inf'), float('inf'), True, True)]
             else:
-                T1 = apply(left_literal, D)
+                T1 = apply(left_literal, D, nested_atoms=nested_atoms)
 
             if right_literal.get_predicate() == "Top":
                 T2 = [Interval(float('-inf'), float('inf'), True, True)]
             else:
-                T2 = apply(right_literal, D)
+                T2 = apply(right_literal, D, nested_atoms=nested_atoms)
 
             T = []
             if op_name == "Until":
@@ -139,6 +139,12 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
                                 if atoms_with_interval is not None:
                                     r = {
                                         "rule": "until",
+                                        "interval": t
+                                    }
+                                    atoms_with_interval[literal].append(r)
+                                if nested_atoms is not None:
+                                    r = {
+                                        "rule": "until",
                                         "roh_1": t1,
                                         "roh_2": t2,
                                         "roh_3": literal.operator.interval,
@@ -146,8 +152,7 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
                                         "alpha_2": right_literal,
                                         "interval": t
                                     }
-                                    atoms_with_interval[literal].append(r)
-
+                                    nested_atoms[literal].append(r)
             else:
                 if T1 and T2:
                     for t1 in T1:
@@ -158,6 +163,12 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
                                 if atoms_with_interval is not None:
                                     r = {
                                         "rule": "since",
+                                        "interval": t
+                                    }
+                                    atoms_with_interval[literal].append(r)
+                                if nested_atoms is not None:
+                                    r = {
+                                        "rule": "since",
                                         "roh_1": t1,
                                         "roh_2": t2,
                                         "roh_3": literal.operator.interval,
@@ -165,7 +176,8 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
                                         "alpha_2": right_literal,
                                         "interval": t
                                     }
-                                    atoms_with_interval[literal].append(r)
+                                    nested_atoms[literal].append(r)
+
             return T
 
         else:
@@ -187,14 +199,14 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
                       if atoms_with_interval is not None:
                         # roh_1 is the interval of the atom in D
                         r = {
-                          "rule": "add",
+                          "rule": "diamondminus",
                           "interval": interval
                         }
                         atoms_with_interval[literal_copy].append(r)
 
                       if nested_atoms is not None:
                         r = {
-                          "rule": "add",
+                          "rule": "diamondminus",
                           "roh_1": t0,
                           "roh_2": literal.operators[0].interval,
                           "alpha": alpha,
@@ -210,14 +222,14 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
                       if atoms_with_interval is not None:
                         # roh_1 is the interval of the atom in D
                         r = {
-                          "rule": "circle_add",
+                          "rule": "boxminus",
                           "interval": interval
                         }
                         atoms_with_interval[literal_copy].append(r)
 
                       if nested_atoms is not None:
                         r = {
-                          "rule": "circle_add",
+                          "rule": "boxminus",
                           "roh_1": t0,
                           "roh_2": literal.operators[0].interval,
                           "alpha": alpha,
@@ -234,14 +246,14 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
                       if atoms_with_interval is not None:
                         # roh_1 is the interval of the atom in D
                         r = {
-                          "rule": "sub",
+                          "rule": "diamondplus",
                           "interval": interval
                         }
                         atoms_with_interval[literal_copy].append(r)
 
                       if nested_atoms is not None:
                         r = {
-                          "rule": "sub",
+                          "rule": "diamondplus",
                           "roh_1": t0,
                           "roh_2": literal.operators[0].interval,
                           "alpha": alpha,
@@ -258,14 +270,14 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
                       if atoms_with_interval is not None:
                         # roh_1 is the interval of the atom in D
                         r = {
-                          "rule": "circle_sub",
+                          "rule": "boxplus",
                           "interval": interval
                         }
                         atoms_with_interval[literal_copy].append(r)
 
                       if nested_atoms is not None:
                         r = {
-                          "rule": "circle_sub",
+                          "rule": "boxplus",
                           "roh_1": t0,
                           "roh_2": literal.operators[0].interval,
                           "alpha": alpha,
@@ -279,7 +291,7 @@ def apply(literal, D, delta_old=None, atoms_with_interval=None, nested_atoms=Non
             return T
 
 
-def reverse_apply(literal, D, atoms_with_interval=None):
+def reverse_apply(literal, outer_T, nested_atoms=None):
     """
     Apply MTL operator(s) to a literal.
 
@@ -293,61 +305,56 @@ def reverse_apply(literal, D, atoms_with_interval=None):
     if isinstance(literal, Atom) or len(literal.operators) == 0:
         predicate = literal.get_predicate()
         entity = literal.get_entity()
+        return outer_T
 
-        if entity: # not None
-            if predicate in D and entity in D[predicate]:
-                return D[predicate][entity]
-            else:
-                return []
-
-        else:
-            if predicate in D:
-                return D[predicate]
-            else:
-                return []
     else:
         op_name = literal.get_op_name()
         pop_operator = literal.operators.pop(0)
+        # inner atom IS HEAD
         alpha = copy.deepcopy(literal)
-        T0 = reverse_apply(literal, D)
+        # inner atom holds at some T0
         literal.operators.insert(0, pop_operator)
+        # original
+        literal_copy = copy.deepcopy(literal)
         T = []
         if op_name == "Boxplus":
-            for t0 in T0:
+            for t0 in outer_T:
+              # dnh: Remark: Translate to since with A1 = T
               interval = Interval.add(t0, literal.operators[0].interval)
               if Interval.is_valid_interval(interval.left_value, interval.right_value,
                                             interval.left_open, interval.right_open):
                   T.append(interval)
-                  if atoms_with_interval is not None:
+                  if nested_atoms is not None:
                     r = {
-                      "rule": "reverse_circle_sub",
+                      "rule": "reverse_boxplus",
                       "roh_1": t0,
-                      "roh_2": literal.operators[0].interval,
                       "alpha": alpha,
                       "interval": interval
                     }
-                    atoms_with_interval[literal].append(r)
+                    nested_atoms[literal_copy].append(r)
 
         elif op_name == "Boxminus":
-            for t0 in T0:
+            for t0 in outer_T:
               interval = Interval.sub(t0, literal.operators[0].interval)
               if Interval.is_valid_interval(interval.left_value, interval.right_value,
                                             interval.left_open, interval.right_open):
 
                   T.append(interval)
-                  if atoms_with_interval is not None:
+                  if nested_atoms is not None:
                     r = {
-                      "rule": "reverse_circle_add",
+                      "rule": "reverse_boxminus",
                       "roh_1": t0,
-                      "roh_2": literal.operators[0].interval,
                       "alpha": alpha,
+                      # Interval of BODY
                       "interval": interval
                     }
-                    atoms_with_interval[literal].append(r)
+                    nested_atoms[literal_copy].append(r)
+
         else:
             raise ValueError("{} is an illegal MTL operator name!".format(op_name))
+        T0 = reverse_apply(alpha, T, nested_atoms=nested_atoms)
 
-        return T
+        return T0
 
 
 if __name__ == "__main__":

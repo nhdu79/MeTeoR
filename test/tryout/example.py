@@ -1,17 +1,19 @@
 from meteor_reasoner.utils.entailment_checker import entailment_check
 
-data = ["B(a)@[1,2]", "C(a)@1"]
-program = ["A(X):- Boxminus[1,1]Boxplus[1,2]B(X), C(X)"]
+data = ["B(a)@[0,1]", "C(a)@1"]
+program = ["A(X):- B(X)Since[1,2]Boxplus[1,1]C(X)"]
 fact = "A(a)@1"
 
-# data = ["A(a)@1", "C(a)@1"]
-# program = ["D(X):- Boxminus[1,1]A(X), B(X)", "B(X):- Boxminus[1,1]C(X)"]
-# fact = "D(a)@2"
+# program = ["Boxplus[1,1]A(X):- B(X)"]
+# fact = "A(a)@2"
 
-# current_path = os.path.dirname(os.path.realpath(__file__))
-# program_path= os.path.join(current_path, "../data/finite_program.txt")
-# data_path = os.path.join(current_path, "../data/finite_program.txt")
-# fact = ""
+# data = ["B(a)@[1,2]", "C(a)@1", "C(a)@10"]
+# program = ["Boxplus[1,1]Boxminus[1,1]A(X):- C(X)"]
+# program = ["Boxminus[1,1]A(X):- Boxminus[1,1]Boxplus[1,2]B(X), C(X)"]
+# fact = "A(a)@1"
+
+# data = ["B(a)@[1,2]", "C(a)@1"]
+# program = ["A(X):- Boxminus[1,1]Boxplus[1,2]B(X), C(X)"]
 
 result = entailment_check(data, program, fact, glassbox=True)
 

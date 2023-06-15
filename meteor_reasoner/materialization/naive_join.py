@@ -27,7 +27,9 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
     def ground_body(global_literal_index, delta, context):
         if global_literal_index == len(literals):
             T = []
+            # dnh: For atoms in body rule
             atoms_with_interval = defaultdict(list)
+            # dnh: For atoms/literals in nested inside temporal operators with the first level of nesting is simply an atom
             nested_atoms = defaultdict(list)
             '''
             dnh: Go through all the literals in the body of the rule and apply MTL ops to literals
@@ -139,21 +141,15 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                                 for intv in intvs:
                                     # Intermediate step
                                     if isinstance(intv, dict):
-                                        # s_intv = Interval.intersection(intv['interval'], interval)
-
                                         s_intv = Interval.inclusion(interval, intv['interval'])
                                         if s_intv:
-                                            # dnh: 07/06: EDGECASE nr8 where intervals overlap at borders
-                                            # if rule.__str__() == "A(X):-Diamondminus[3,4]A(X)" and intv["interval"].__str__() == "[9,25]":
-                                            #     breakpoint()
                                             a_pred = lit.__str__()
-                                            if intv["rule"] in ["until", "since"]:
-                                                r_str = {k: v.__str__() for k, v in intv.items()}
-                                                el["pred"].append(r_str)
-                                            else:
-                                                el["pred"].append({ "alpha": a_pred, "interval": intv["interval"].__str__() })
+                                            # if intv["rule"] in ["until", "since"]:
+                                            #     r_str = {k: v.__str__() for k, v in intv.items()}
+                                            #     el["pred"].append(r_str)
+                                            # else:
+                                            el["pred"].append({ "alpha": a_pred, "interval": intv["interval"].__str__() })
                                     else:
-                                        # s_intv = Interval.intersection(intv, interval)
                                         s_intv = Interval.inclusion(interval, intv)
                                         if s_intv:
                                             a_pred = Atom(lit.get_predicate(), entity=lit.get_entity(), interval=intv).__str__()
@@ -162,30 +158,33 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                                 graph.append(el)
 
                     if not isinstance(rule.head, Atom):
-                        tmp_D = defaultdict(lambda: defaultdict(list))
-                        tmp_D[head_predicate][replaced_head_entity] = T
+                        # Remark: Was wrong, already rewrote this
                         tmp_head = copy.deepcopy(rule.head)
                         tmp_head.set_entity(replaced_head_entity)
 
                         if must_literals is not None:
                             must_literals[tmp_head] += T
 
-                        atoms_with_interval = defaultdict(list)
-                        T = reverse_apply(tmp_head, tmp_D, atoms_with_interval=atoms_with_interval)
+                        nested_atoms = defaultdict(list)
+                        # T = reverse_apply(tmp_head, tmp_D, nested_atoms=nested_atoms)
+                        tmp_T = copy.deepcopy(T)
+                        T = reverse_apply(tmp_head, tmp_T, nested_atoms=nested_atoms)
                         if graph is not None:
-                            for interval in T:
-                                el = defaultdict(list)
-                                for lit, intvs in atoms_with_interval.items():
-
-                                    for intv in intvs:
-                                        s_intv = Interval.intersection(intv['interval'], interval)
-                                        if intv['interval'] == interval:
-                                            a_succ = Atom(intv['alpha'].get_predicate(), entity=intv['alpha'].get_entity(), interval=intv['interval']).__str__()
-                                            el["succ"] = a_succ
-                                            el["rule"] = intv['rule']
-                                            el["pred"] = { "alpha": lit.__str__(), "interval": intv["roh_1"].__str__() }
-                                if el not in graph and isinstance(el["pred"], dict):
-                                    graph.append(el)
+                            for lit, rs in nested_atoms.items():
+                                for intv in rs:
+                                    el = {}
+                                    if intv['alpha'].get_op_name() is None:
+                                        a_succ = Atom(intv['alpha'].get_predicate(), entity=intv['alpha'].get_entity(), interval=intv['interval']).__str__()
+                                    else:
+                                        a_succ = {
+                                                "alpha": intv['alpha'].__str__(),
+                                                "interval": intv['interval'].__str__()
+                                        }
+                                    el["succ"] = a_succ
+                                    el["rule"] = intv['rule']
+                                    el["pred"] = { "alpha": lit.__str__(), "interval": intv["roh_1"].__str__() }
+                                    if el not in graph:
+                                        graph.append(el)
 
                     delta_new[head_predicate][replaced_head_entity] += T
                     # dnh: Used only in some experiments

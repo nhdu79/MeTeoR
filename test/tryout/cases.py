@@ -11,12 +11,14 @@ import os
 # fact = "A(a)@10"
 # case = 6
 # fact = "A(a)@10"
-case = 7
-fact = "A(a)@26.5"
+# case = 7
+# fact = "A(a)@26.5"
 # case = 8
 # fact = "A(a)@4"
-# case = 9
-# fact = "NoSymptoms(charlie)@100"
+
+# dnh: 15/06 UNTIL was exchanged by SINCE with flipped intervals?????
+case = 9
+fact = "NoSymptoms(charlie)@100"
 # case = 15
 # fact = "A(a,b)@0"
 
