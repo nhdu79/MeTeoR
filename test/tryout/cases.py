@@ -1,4 +1,5 @@
 from meteor_reasoner.utils.entailment_checker import entailment_check
+from proof_extractor.hypergraph_parser import HyperGraphParser
 import os
 
 # case = 0
@@ -15,18 +16,25 @@ import os
 # fact = "A(a)@26.5"
 # case = 8
 # fact = "A(a)@4"
-
-# dnh: 15/06 UNTIL was exchanged by SINCE with flipped intervals?????
-case = 9
-fact = "NoSymptoms(charlie)@100"
-# case = 15
-# fact = "A(a,b)@0"
+# case = 9
+# fact = "NoSymptoms(charlie)@100"
+case = 15
+fact = "A(a,b)@0"
 
 
 current_path = os.path.dirname(os.path.realpath(__file__))
 program_path= os.path.join(current_path, "../data/case_{}_program.txt".format(case))
 data_path = os.path.join(current_path, "../data/case_{}_dataset.txt".format(case))
 
-result = entailment_check(data_path, program_path, fact, glassbox=True)
 
-breakpoint()
+result = entailment_check(data_path, program_path, fact, glassbox=True)
+facts = []
+with open(data_path, 'r') as f:
+    data = f.readlines()
+    for line in data:
+        if len(line.strip()) > 0:
+            facts.append(line.strip())
+
+parser = HyperGraphParser(result, facts)
+parser.initialization()
+parser.write_to_file_as_json("test_{}.json".format(case))
