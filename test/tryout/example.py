@@ -1,5 +1,5 @@
 from meteor_reasoner.utils.entailment_checker import entailment_check
-from proof_extractor.hypergraph_parser import HyperGraphParser
+from meteor_reasoner.utils.hypergraph_parser import HyperGraphParser
 
 data = ["B(a)@[0,1]", "C(a)@1"]
 program = ["A(X):- B(X)Since[1,2]Boxplus[1,1]C(X)"]
@@ -20,7 +20,7 @@ result = entailment_check(data, program, fact, glassbox=True)
 parser = HyperGraphParser(result, data)
 parser.initialization()
 
-parser.write_to_file_as_json("test.json")
+# parser.write_to_file_as_json("test.json")
 
 breakpoint()
 

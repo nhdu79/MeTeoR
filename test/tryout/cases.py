@@ -1,5 +1,5 @@
 from meteor_reasoner.utils.entailment_checker import entailment_check
-from proof_extractor.hypergraph_parser import HyperGraphParser
+from meteor_reasoner.utils.hypergraph_parser import HyperGraphParser
 import os
 
 # case = 0
@@ -37,4 +37,4 @@ with open(data_path, 'r') as f:
 
 parser = HyperGraphParser(result, facts)
 parser.initialization()
-parser.write_to_file_as_json("test_{}.json".format(case))
+# parser.write_to_file_as_json("test_{}.json".format(case))
