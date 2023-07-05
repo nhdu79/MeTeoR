@@ -44,7 +44,7 @@ except:
 
 
 def run():
-    result = entailment_check_without_load(D, program, fact, glassbox=True)
+    result = entailment_check_without_load(D, program, fact, glassbox=False)
     if result == False:
         print("Materialisation: Not entailed")
         return False
