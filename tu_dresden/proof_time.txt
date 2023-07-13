@@ -3,3 +3,4 @@ output/30000.json: 26.905
 output/40000.json: 45.284
 output/50000.json: 77.232
 output/90000.json: 230.894
+output/500.json: 0.441

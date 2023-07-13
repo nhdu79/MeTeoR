@@ -25,6 +25,13 @@ class HyperGraphParser:
                     self.vertices.append(v)
             self.edges.append((parents, conn['rule'], child[0]))
 
+    # Turn all edges in to string, print out all that contains "Scientist"
+    def print_edges(self):
+        for edge in self.edges:
+            str_edges = str(edge)
+            if "Scientist" in str_edges:
+                print(str_edges)
+
 
     def write_to_file_as_json(self, file_path):
         with open(file_path, 'w') as f:

@@ -1,22 +1,12 @@
-* IProof
-    * Rules are inferences with head, name, body
-    * Facts are empty inferences with "asserted" name
-    * Facts are generic data struct.
+[ ] Start writing ~15 pages
+    - Introduction (Problem etc..)
+    - Preliminaries (Definition, details datalogMTL, MeTeoR, etc...)
+    - Actual Report: What I did, outside in from Graph. At each point of tracing ~ corresponding theory (rule application, etc..)
+    - Evaluation section <<< === UNTIL HERE GOAL
+    - Conclusion
+    - References
+    - (Abstract later)
 
-* Priority:
-- [x] Split Since
-- [ ] JSON parse?
-
-* Later:
-- [ ] Java Algo
-- [ ] Mb Tests but after the algorithm
-
-* OLD ======================================
-- [x] Since/Until nested
-- [x] Nested rules for head
-- [x] Rules at the end for deriving the atom
-- [x] Fix colaesce
-- [x] Split Temporal rules into 2
-- [x] Nested rules
-- [x] Edge case where interval-borders meet
-- [x] Change name rules to ops
+[ ] SIZE OF GRAPH EVALUTION after each mater. round for 100000
+[ ] EVERY OTHER ONE RECORD FINAL GRAPH SIZE & DATASET SIZE (ENTRIES)
+[ ] REDUNDANCY COUNT

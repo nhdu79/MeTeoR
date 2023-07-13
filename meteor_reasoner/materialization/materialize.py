@@ -62,7 +62,7 @@ def seminaive_combine(D, delta_new, delta_old, D_index=None):
 
 
 # dnh 31/05: Coalescing for union of intervals
-def naive_combine(D, delta_new, D_index=None):
+def naive_combine(D, delta_new, D_index=None, graph=None):
     fixpoint = True
     for head_predicate in delta_new:
         for entity, T in delta_new[head_predicate].items():
@@ -83,14 +83,14 @@ def naive_combine(D, delta_new, D_index=None):
                                 continue
                             D_index[head_predicate][str(i) + "@" + item1.name + "||" + str(j) + "@" + item2.name].append(entity)
             else:
-                coalesced_T = coalescing(T + D[head_predicate][entity])
+                coalesced_T = coalescing(T + D[head_predicate][entity], entity=entity, predicate=head_predicate, graph=graph)
                 if fixpoint:
                     if coalesced_T != D[head_predicate][entity]:
                         fixpoint = False
                 D[head_predicate][entity] = coalesced_T
 
     if not fixpoint:
-         coalescing_d(D)
+         coalescing_d(D, graph=graph)
 
     return fixpoint
 
@@ -155,7 +155,7 @@ def materialize(D, rules, mode="seminaive", K=100, logger=None, must_literals=No
                         total_number += len(D[predicate][entity])
                 logger.info("Iteration={}, t={}, D={}, n={}".format(k, time.time() - start_time - calc_time, total_number, number_of_redundant_facts))
             else:
-                fixpoint = naive_combine(D, delta_new, D_index)
+                fixpoint = naive_combine(D, delta_new, D_index, graph=graph)
 
         if fixpoint:
             return True

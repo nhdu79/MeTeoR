@@ -2,8 +2,8 @@
 
 for i in $(seq 1 1 10)
 do
-  fact_nr=$((i * 10000))
+  fact_nr=$((i * 100))
   python3 pipeline.py --facts $fact_nr --glassbox 1
-  # out_data_dir="output/$fact_nr.json"
-  # java -jar proof_extractor.jar $out_data_dir
+  out_data_dir="output/$fact_nr.json"
+  java -jar proof_extractor.jar $out_data_dir
 done

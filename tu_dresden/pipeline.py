@@ -80,6 +80,7 @@ if glassbox == "1" and entailment:
     # parser.write_to_bash()
     parser.write_to_file_as_json("{}.json".format(file_name))
 
+
 end_time = time.perf_counter()
 total_time = end_time - start_time
 print("========= RESULT =========")
@@ -87,4 +88,7 @@ print("Total time: ", total_time)
 
 if glassbox == "1":
     with open("trace_time.txt", "a") as f:
+        f.write(f"{nr_facts} : {total_time}\n")
+else:
+    with open("time.txt", "a") as f:
         f.write(f"{nr_facts} : {total_time}\n")
