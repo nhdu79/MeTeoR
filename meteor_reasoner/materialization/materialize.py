@@ -95,7 +95,7 @@ def naive_combine(D, delta_new, D_index=None):
     return fixpoint
 
 
-def materialize(D, rules, mode="seminaive", K=100, logger=None, must_literals=None, metrics=None):
+def materialize(D, rules, mode="seminaive", K=100, logger=None, must_literals=None, metrics=None, graph=None):
     """
     The function implements the materialization operation.
     Args:
@@ -119,13 +119,16 @@ def materialize(D, rules, mode="seminaive", K=100, logger=None, must_literals=No
         start_time = time.time()
         calc_time = 0.0
 
+    if graph is not None and seminaive:
+        raise Exception("Glassbox with semi-naive is not supported yet")
+
     while k < K:
         print("Iteration:", k)
         k += 1
         if seminaive:
             delta_new = seminaive_immediate_consequence_operator(rules, D, D_index, delta_old=delta_old)
         else:
-            delta_new = naive_immediate_consequence_operator(rules, D, D_index)
+            delta_new = naive_immediate_consequence_operator(rules, D, D_index, graph=graph)
 
         if seminaive:
             delta_old = defaultdict(lambda: defaultdict(list))

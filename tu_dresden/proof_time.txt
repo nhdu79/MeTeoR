@@ -1,0 +1,5 @@
+output/20000.json: 11.153
+output/30000.json: 26.905
+output/40000.json: 45.284
+output/50000.json: 77.232
+output/90000.json: 230.894
