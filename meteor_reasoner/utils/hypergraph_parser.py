@@ -29,7 +29,7 @@ class HyperGraphParser:
     def print_edges(self):
         for edge in self.edges:
             str_edges = str(edge)
-            if "Scientist" in str_edges:
+            if "doctoralDegreeFrom(ID7087,ID4314)" in str_edges:
                 print(str_edges)
 
 
@@ -46,6 +46,13 @@ class HyperGraphParser:
             'edges': self.edges,
             'full_vertices': self.vertices
         }))
+
+
+    def read_from_file_as_json(self, file_path):
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+            self.edges = data['edges']
+            self.vertices = data['full_vertices']
 
 
 
@@ -89,28 +96,3 @@ def generate_string_entity(alpha=None, interval=None, entity_string=None):
             interval = f"[{interval},{interval}]"
 
     return f"{alpha}@{interval}"
-
-
-# class GraphEntity:
-#     def __init__(self, alpha=None, interval=None, entity_string=None):
-#         if entity_string is not None:
-#             alpha, interval = entity_string.split('@')
-#             if interval[0] != '[':
-#                 interval = f"[{interval},{interval}]"
-#         self.alpha = alpha
-#         self.interval = interval
-#         self.id = None
-#
-#     def __str__(self):
-#         return f"{self.alpha}@{self.interval}"
-#
-#     def __eq__(self, other):
-#         return self.__str__() == other.__str__()
-#
-#     def set_id(self, id):
-#         self.id = id
-#
-#     def get_id(self):
-#         if self.id is None:
-#             raise Exception(f"Id not set for {self.__str__()}")
-#         return self.id

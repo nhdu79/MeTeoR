@@ -1,0 +1,116 @@
+========= 10000 =========
+          43649470 function calls (38794071 primitive calls) in 33.542 seconds
+
+   Ordered by: internal time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    28196   12.721    0.000   13.431    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/naive_join.py:127(do_profile_2)
+     8655    6.247    0.001    6.425    0.001 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/naive_join.py:113(do_profile_1)
+    36663    3.448    0.000    3.739    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/coalesce.py:5(coalescing)
+4323452/188079    3.169    0.000    7.701    0.000 /usr/lib/python3.8/copy.py:128(deepcopy)
+526871/216092    0.856    0.000    6.686    0.000 /usr/lib/python3.8/copy.py:258(_reconstruct)
+524664/213885    0.717    0.000    5.583    0.000 /usr/lib/python3.8/copy.py:226(_deepcopy_dict)
+  9175982    0.577    0.000    0.577    0.000 {method 'get' of 'dict' objects}
+50261/255    0.546    0.000   29.646    0.116 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/naive_join.py:27(ground_body)
+  1382030    0.442    0.000    0.604    0.000 /usr/lib/python3.8/copy.py:242(_keep_alive)
+  7275591    0.426    0.000    0.426    0.000 {built-in method builtins.id}
+   239584    0.359    0.000    0.359    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:311(__str__)
+   329252    0.334    0.000    0.717    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/atom.py:31(__str__)
+48641/36279    0.175    0.000    1.837    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/apply.py:74(apply)
+    28334    0.168    0.000    1.337    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/join_util.py:29(interval_merge)
+  1049328    0.159    0.000    0.605    0.000 /usr/lib/python3.8/copy.py:263(<genexpr>)
+   526871    0.155    0.000    0.155    0.000 {method '__reduce_ex__' of 'object' objects}
+   132776    0.152    0.000    2.201    0.000 /usr/lib/python3.8/copy.py:209(_deepcopy_tuple)
+  2711738    0.151    0.000    0.151    0.000 /usr/lib/python3.8/copy.py:182(_deepcopy_atomic)
+    79212    0.142    0.000    0.558    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/ground.py:5(ground_generator)
+  1925661    0.140    0.000    0.140    0.000 {built-in method builtins.isinstance}
+   526871    0.137    0.000    0.186    0.000 /usr/lib/python3.8/copyreg.py:90(__newobj__)
+199926/163826    0.124    0.000    2.391    0.000 /usr/lib/python3.8/copy.py:200(_deepcopy_list)
+   360103    0.118    0.000    0.153    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/term.py:15(__hash__)
+  1283426    0.118    0.000    0.118    0.000 {built-in method builtins.getattr}
+  1658498    0.103    0.000    0.103    0.000 {method 'append' of 'list' objects}
+   138068    0.102    0.000    0.400    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:65(__str__)
+   231592    0.095    0.000    0.124    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/atom.py:43(<listcomp>)
+   526871    0.087    0.000    0.087    0.000 {method 'update' of 'dict' objects}
+    93524    0.086    0.000    0.353    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:68(__hash__)
+  1246316    0.076    0.000    0.076    0.000 {built-in method builtins.len}
+   502961    0.075    0.000    0.091    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:343(__eq__)
+    65649    0.071    0.000    0.071    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:284(is_valid_interval)
+    53187    0.057    0.000    0.125    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:241(intersection)
+   132776    0.057    0.000    2.042    0.000 /usr/lib/python3.8/copy.py:210(<listcomp>)
+   756555    0.056    0.000    0.056    0.000 {built-in method builtins.issubclass}
+   611443    0.055    0.000    0.055    0.000 {method 'items' of 'dict' objects}
+   495596    0.052    0.000    0.052    0.000 {built-in method builtins.hash}
+   526871    0.049    0.000    0.049    0.000 {built-in method __new__ of type object at 0x909780}
+    97660    0.045    0.000    0.057    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/atom.py:34(<listcomp>)
+    72763    0.042    0.000    0.067    0.000 {built-in method builtins.sorted}
+        3    0.042    0.014    3.873    1.291 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/materialize.py:65(naive_combine)
+   597440    0.041    0.000    0.041    0.000 {method 'join' of 'str' objects}
+    36305    0.041    0.000    0.286    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/rule.py:17(__str__)
+   446653    0.040    0.000    0.040    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/term.py:18(__str__)
+   526877    0.040    0.000    0.040    0.000 {built-in method builtins.hasattr}
+    36305    0.040    0.000    0.045    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:340(__hash__)
+    93137    0.033    0.000    0.039    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/term.py:21(__eq__)
+    86866    0.031    0.000    0.158    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:25(__str__)
+    65221    0.030    0.000    0.030    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/join_util.py:19(boundary_check)
+    39927    0.029    0.000    0.040    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:177(union)
+    28196    0.028    0.000    0.042    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/apply.py:294(reverse_apply)
+        3    0.026    0.009    0.646    0.215 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/coalesce.py:69(coalescing_d)
+    65338    0.025    0.000    0.025    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:229(inclusion)
+   185042    0.024    0.000    0.024    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:44(get_predicate)
+   138068    0.023    0.000    0.086    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:66(<listcomp>)
+     7211    0.020    0.000    0.022    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:441(circle_add)
+        3    0.020    0.007    0.022    0.007 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/index_build.py:4(build_index)
+    76590    0.020    0.000    0.020    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/coalesce.py:9(<lambda>)
+    95005    0.020    0.000    0.020    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:5(__init__)
+    97659    0.020    0.000    0.020    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/atom.py:6(__init__)
+    93524    0.019    0.000    0.096    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:69(<listcomp>)
+    65696    0.019    0.000    0.019    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:56(set_entity)
+   229684    0.017    0.000    0.017    0.000 {method '__deepcopy__' of 'decimal.Decimal' objects}
+    13295    0.016    0.000    0.089    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/naive_join.py:123(<dictcomp>)
+    36305    0.016    0.000    0.151    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/rule.py:19(<listcomp>)
+    46225    0.015    0.000    0.019    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:50(get_op_name)
+    32219    0.013    0.000    0.019    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/term.py:11(new_term)
+   120898    0.012    0.000    0.012    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:47(get_entity)
+     4025    0.012    0.000    0.013    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:410(add)
+    20963    0.011    0.000    0.070    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/coalesce.py:56(<lambda>)
+    28196    0.010    0.000    0.013    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/naive_join.py:176(do_profile_3)
+    36305    0.010    0.000    0.055    0.000 {method 'add' of 'set' objects}
+    28334    0.010    0.000    0.014    0.000 {method 'sort' of 'list' objects}
+    28334    0.009    0.000    0.012    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/join_util.py:48(<listcomp>)
+    32219    0.006    0.000    0.006    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/term.py:2(__init__)
+     5664    0.006    0.000    0.042    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:111(__hash__)
+    29921    0.006    0.000    0.006    0.000 {built-in method builtins.max}
+    45794    0.005    0.000    0.005    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/join_util.py:43(<lambda>)
+    20247    0.005    0.000    0.005    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/join_util.py:12(contain_variable_after_replace)
+    20247    0.005    0.000    0.005    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/join_util.py:5(contain_variable)
+    36100    0.004    0.000    0.004    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/join_util.py:46(<lambda>)
+     1476    0.004    0.000    0.005    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:379(circle_sub)
+     4389    0.004    0.000    0.033    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:108(__str__)
+    25138    0.004    0.000    0.004    0.000 {method 'extend' of 'list' objects}
+     2207    0.004    0.000    0.010    0.000 /usr/lib/python3.8/copy.py:66(copy)
+     1392    0.004    0.000    0.004    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/interval.py:348(sub)
+     9920    0.004    0.000    0.004    0.000 {method 'insert' of 'list' objects}
+     9920    0.002    0.000    0.002    0.000 {method 'pop' of 'list' objects}
+     1208    0.002    0.000    0.015    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/apply.py:7(since_deduce)
+      999    0.001    0.000    0.011    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/apply.py:40(until_deduce)
+     1221    0.001    0.000    0.002    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:93(set_entity)
+     1996    0.001    0.000    0.008    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/coalesce.py:23(<lambda>)
+      255    0.001    0.000   29.647    0.116 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/naive_join.py:10(naive_join)
+     3726    0.000    0.000    0.000    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/atom.py:22(get_predicate)
+        3    0.000    0.000   29.647    9.882 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/t_operator.py:6(naive_immediate_consequence_operator)
+     3726    0.000    0.000    0.000    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/atom.py:25(get_entity)
+     1221    0.000    0.000    0.000    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/classes/literal.py:90(get_op_name)
+        3    0.000    0.000    0.000    0.000 {built-in method builtins.print}
+       88    0.000    0.000    0.000    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/index_build.py:13(<lambda>)
+       77    0.000    0.000    0.000    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/t_operator.py:7(<lambda>)
+        3    0.000    0.000   33.542   11.181 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/materialization/materialize.py:98(materialize)
+       19    0.000    0.000    0.000    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/utils/loader.py:20(<lambda>)
+        4    0.000    0.000    0.000    0.000 /home/zinzin2312/repos/MeTeoR/meteor_reasoner/utils/entail_check.py:4(entail)
+        1    0.000    0.000   33.542   33.542 pipeline.py:67(run)
+        6    0.000    0.000    0.000    0.000 /usr/lib/python3.8/copyreg.py:99(_slotnames)
+        6    0.000    0.000    0.000    0.000 {method 'get' of 'mappingproxy' objects}
+        3    0.000    0.000    0.000    0.000 {method 'keys' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+

@@ -110,52 +110,55 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                     if graph is not None:
                         # Add nested rules to graph
                         if len(nested_atoms) != 0:
-                            for lit, rs in nested_atoms.items():
-                                succ = lit.__str__()
-                                for r in rs:
-                                    el = {}
-                                    el["succ"] = {
-                                        "alpha": succ,
-                                        "interval": r["interval"].__str__()
-                                    }
-                                    el["rule"] = r["rule"]
-                                    el["pred"] = { k: v.__str__() for k,v in r.items() if k not in ["interval", "rule"] }
-                                    if el not in graph:
-                                        graph.append(el)
+                            def do_profile_1():
+                                for lit, rs in nested_atoms.items():
+                                    succ = lit.__str__()
+                                    for r in rs:
+                                        el = {}
+                                        el["succ"] = {
+                                            "alpha": succ,
+                                            "interval": r["interval"].__str__()
+                                        }
+                                        el["rule"] = r["rule"]
+                                        el["pred"] = { k: v.__str__() for k,v in r.items() if k not in ["interval", "rule"] }
+                                        if el not in graph:
+                                            graph.append(el)
+                            do_profile_1()
+                        def do_profile_2():
+                            for interval in T:
+                                el = defaultdict(list)
+                                # Succ
+                                # if isinstance(rule.head, Atom):
+                                if rule.head.get_op_name() is None:
+                                    a_succ = Atom(head_predicate, entity=replaced_head_entity, interval=interval).__str__()
+                                else:
+                                    alpha = copy.deepcopy(rule.head)
+                                    alpha.set_entity(replaced_head_entity)
+                                    a_succ = { "alpha": alpha.__str__(), "interval": interval.__str__() }
 
-                        for interval in T:
-                            el = defaultdict(list)
-                            # Succ
-                            # if isinstance(rule.head, Atom):
-                            if rule.head.get_op_name() is None:
-                                a_succ = Atom(head_predicate, entity=replaced_head_entity, interval=interval).__str__()
-                            else:
-                                alpha = copy.deepcopy(rule.head)
-                                alpha.set_entity(replaced_head_entity)
-                                a_succ = { "alpha": alpha.__str__(), "interval": interval.__str__() }
-
-                            el["succ"] = a_succ
-                            el["rule"] = rule.__str__()
-                            for lit, intvs in atoms_with_interval.items():
-                                # Pred
-                                for intv in intvs:
-                                    # Intermediate step
-                                    if isinstance(intv, dict):
-                                        s_intv = Interval.inclusion(interval, intv['interval'])
-                                        if s_intv:
-                                            a_pred = lit.__str__()
-                                            # if intv["rule"] in ["until", "since"]:
-                                            #     r_str = {k: v.__str__() for k, v in intv.items()}
-                                            #     el["pred"].append(r_str)
-                                            # else:
-                                            el["pred"].append({ "alpha": a_pred, "interval": intv["interval"].__str__() })
-                                    else:
-                                        s_intv = Interval.inclusion(interval, intv)
-                                        if s_intv:
-                                            a_pred = Atom(lit.get_predicate(), entity=lit.get_entity(), interval=intv).__str__()
-                                            el["pred"].append(a_pred)
-                            if el not in graph:
-                                graph.append(el)
+                                el["succ"] = a_succ
+                                el["rule"] = rule.__str__()
+                                for lit, intvs in atoms_with_interval.items():
+                                    # Pred
+                                    for intv in intvs:
+                                        # Intermediate step
+                                        if isinstance(intv, dict):
+                                            s_intv = Interval.inclusion(interval, intv['interval'])
+                                            if s_intv:
+                                                a_pred = lit.__str__()
+                                                # if intv["rule"] in ["until", "since"]:
+                                                #     r_str = {k: v.__str__() for k, v in intv.items()}
+                                                #     el["pred"].append(r_str)
+                                                # else:
+                                                el["pred"].append({ "alpha": a_pred, "interval": intv["interval"].__str__() })
+                                        else:
+                                            s_intv = Interval.inclusion(interval, intv)
+                                            if s_intv:
+                                                a_pred = Atom(lit.get_predicate(), entity=lit.get_entity(), interval=intv).__str__()
+                                                el["pred"].append(a_pred)
+                                if el not in graph:
+                                    graph.append(el)
+                        do_profile_2()
 
                     if not isinstance(rule.head, Atom):
                         # Remark: Was wrong, already rewrote this
@@ -170,21 +173,23 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                         tmp_T = copy.deepcopy(T)
                         T = reverse_apply(tmp_head, tmp_T, nested_atoms=nested_atoms)
                         if graph is not None:
-                            for lit, rs in nested_atoms.items():
-                                for intv in rs:
-                                    el = {}
-                                    if intv['alpha'].get_op_name() is None:
-                                        a_succ = Atom(intv['alpha'].get_predicate(), entity=intv['alpha'].get_entity(), interval=intv['interval']).__str__()
-                                    else:
-                                        a_succ = {
-                                                "alpha": intv['alpha'].__str__(),
-                                                "interval": intv['interval'].__str__()
-                                        }
-                                    el["succ"] = a_succ
-                                    el["rule"] = intv['rule']
-                                    el["pred"] = { "alpha": lit.__str__(), "interval": intv["roh_1"].__str__() }
-                                    if el not in graph:
-                                        graph.append(el)
+                            def do_profile_3():
+                                for lit, rs in nested_atoms.items():
+                                    for intv in rs:
+                                        el = {}
+                                        if intv['alpha'].get_op_name() is None:
+                                            a_succ = Atom(intv['alpha'].get_predicate(), entity=intv['alpha'].get_entity(), interval=intv['interval']).__str__()
+                                        else:
+                                            a_succ = {
+                                                    "alpha": intv['alpha'].__str__(),
+                                                    "interval": intv['interval'].__str__()
+                                            }
+                                        el["succ"] = a_succ
+                                        el["rule"] = intv['rule']
+                                        el["pred"] = { "alpha": lit.__str__(), "interval": intv["roh_1"].__str__() }
+                                        if el not in graph:
+                                            graph.append(el)
+                            do_profile_3()
 
                     delta_new[head_predicate][replaced_head_entity] += T
                     # dnh: Used only in some experiments

@@ -7,6 +7,8 @@
     - References
     - (Abstract later)
 
-[ ] SIZE OF GRAPH EVALUTION after each mater. round for 100000
-[ ] EVERY OTHER ONE RECORD FINAL GRAPH SIZE & DATASET SIZE (ENTRIES)
-[ ] REDUNDANCY COUNT
+- ??? [ ] REDUNDANCY COUNT
+- [ ] How many Intervals in T?
+- [ ] __str__() method outside
+
+=============================================

@@ -1,6 +1,11 @@
-output/20000.json: 11.153
-output/30000.json: 26.905
-output/40000.json: 45.284
-output/50000.json: 77.232
-output/90000.json: 230.894
-output/500.json: 0.441
+output/10000.json: 3.594
+output/20000.json: 11.823
+output/30000.json: 28.623
+output/40000.json: 46.894
+output/50000.json: 79.606
+output/60000.json: 124.848
+output/70000.json: 145.463
+output/80000.json: 199.675
+output/90000.json: 234.787
+================================
+
