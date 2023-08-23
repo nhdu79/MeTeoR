@@ -28,8 +28,7 @@ def coalescing(old_intervals, predicate=None, entity=None, graph=None):
                     }
                     # Next iteration starts with interval i
                     merged_intervals = [old_intervals[i]]
-                    if el not in graph:
-                        graph.append(el)
+                    graph.append(el)
                     is_merged = True
                 # Else reset the merged intervals
                 else:
@@ -60,8 +59,7 @@ def coalescing(old_intervals, predicate=None, entity=None, graph=None):
                 "pred": [*interval_strs]
             }
             merged_intervals = []
-            if el not in graph:
-                graph.append(el)
+            graph.append(el)
 
     return new_intervals
 

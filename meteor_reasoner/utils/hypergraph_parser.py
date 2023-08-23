@@ -3,13 +3,13 @@ import json
 
 class HyperGraphParser:
     def __init__(self, conns, facts):
-        self.entities = defaultdict(str)
         self.conns = conns
         self.edges = []
         self.vertices = []
         self.facts = facts
 
     def initialization(self):
+        # DATASET
         for fact in self.facts:
             v = generate_string_entity(entity_string=fact)
             if v not in self.vertices:
@@ -23,7 +23,9 @@ class HyperGraphParser:
             for v in child + parents:
                 if v not in self.vertices:
                     self.vertices.append(v)
-            self.edges.append((parents, conn['rule'], child[0]))
+            local_edge = (parents, rule, child[0])
+            if local_edge not in self.edges:
+                self.edges.append((parents, rule, child[0]))
 
     # Turn all edges in to string, print out all that contains "Scientist"
     def print_edges(self):
@@ -53,7 +55,6 @@ class HyperGraphParser:
             data = json.load(f)
             self.edges = data['edges']
             self.vertices = data['full_vertices']
-
 
 
 def vertices_from_entity(entity):

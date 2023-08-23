@@ -7,5 +7,37 @@ output/60000.json: 124.848
 output/70000.json: 145.463
 output/80000.json: 199.675
 output/90000.json: 234.787
+
 ================================
 
+output/10000.json: 3.994
+output/10000.json: 3.826
+output/10000.json: 5.305
+output/10000.json: 5.322
+output/10000.json: 5.208
+output/10000.json: 5.218
+output/10000.json: 5.784
+output/10000.json: 5.351
+output/10000.json: 5.226
+output/10000.json: 5.205
+output/10000.json: 5.212
+output/10000.json: 5.195
+
+================================ 2 ROUNDS OF ITER
+output/10000.json: 5.212
+output/10000.json: 5.27
+output/10000.json: 5.315
+output/20000.json: 20.807
+output/30000.json: 43.544
+output/40000.json: 76.07
+output/50000.json: 132.979
+output/60000.json: 180.698
+output/70000.json: 238.848
+output/80000.json: 320.696
+output/90000.json: 410.747
+output/100000.json: 535.083
+output/10000.json: 5.374
+output/20000.json: 20.426
+output/30000.json: 46.664
+output/40000.json: 80.777
+output/50000.json: 135.333

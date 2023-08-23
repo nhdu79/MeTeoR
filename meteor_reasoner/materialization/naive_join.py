@@ -99,6 +99,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
             # If all literals appear in some time interval (T)
             if len(T) == len(literals):
                 # dnh: 26/05 new rule for interval merge intersection rule generalization
+                # og_len = len(T)
                 T = interval_merge(T)
                 exclude_t = []
                 if len(T) != 0 and len(n_T) != 0:
@@ -106,6 +107,9 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                 if len(exclude_t) != 0:
                     T = Interval.diff(T, exclude_t)
                 # If all literals appear TOGETHER in some time interval (T)
+                # after_merge_len = len(T)
+                # if after_merge_len >  og_len:
+                #     print("Og and after merge len: ", og_len, after_merge_len)
                 if len(T) != 0:
                     if graph is not None:
                         # Add nested rules to graph
@@ -121,8 +125,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                                         }
                                         el["rule"] = r["rule"]
                                         el["pred"] = { k: v.__str__() for k,v in r.items() if k not in ["interval", "rule"] }
-                                        if el not in graph:
-                                            graph.append(el)
+                                        graph.append(el)
                             do_profile_1()
                         def do_profile_2():
                             for interval in T:
@@ -156,8 +159,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                                             if s_intv:
                                                 a_pred = Atom(lit.get_predicate(), entity=lit.get_entity(), interval=intv).__str__()
                                                 el["pred"].append(a_pred)
-                                if el not in graph:
-                                    graph.append(el)
+                                graph.append(el)
                         do_profile_2()
 
                     if not isinstance(rule.head, Atom):
@@ -187,8 +189,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                                         el["succ"] = a_succ
                                         el["rule"] = intv['rule']
                                         el["pred"] = { "alpha": lit.__str__(), "interval": intv["roh_1"].__str__() }
-                                        if el not in graph:
-                                            graph.append(el)
+                                        graph.append(el)
                             do_profile_3()
 
                     delta_new[head_predicate][replaced_head_entity] += T

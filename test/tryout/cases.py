@@ -37,4 +37,6 @@ with open(data_path, 'r') as f:
 
 parser = HyperGraphParser(result, facts)
 parser.initialization()
+
+breakpoint()
 # parser.write_to_file_as_json("test_{}.json".format(case))

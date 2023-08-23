@@ -35,13 +35,23 @@ with open(args.rulepath) as file:
     program = load_program(rules)
 
 
+keys_from_previous_iterations = []
+
 while iter > 0:
     materialize(D, rules=program, mode="naive", K=1)
+    # If not last iteration, add the keys to the list
+    keys = list(D['Scientist'].keys())
+    if iter > 1:
+        keys_from_previous_iterations.extend(keys)
     iter -= 1
 
 selected_facts = []
-keys = list(D['Scientist'].keys())
-sampled_keys = random.sample(keys, 5)
+keys_from_last_round= [key for key in keys if key not in keys_from_previous_iterations]
+if len(keys_from_last_round) == 0:
+    print("No new keys found")
+    exit(1)
+
+sampled_keys = random.sample(keys_from_last_round, 1)
 
 for key in sampled_keys:
     intervals = D['Scientist'][key]
@@ -52,8 +62,3 @@ for key in sampled_keys:
 # Write the selected facts to file
 with open(f"data/T4_{nr_facts}.txt", "w") as file:
     file.write("\n".join(selected_facts))
-
-
-
-
-

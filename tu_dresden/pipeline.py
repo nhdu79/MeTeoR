@@ -83,6 +83,12 @@ if do_profile == "1":
     pr = cProfile.Profile()
     pr.enable()
     entailment = run()
+    if glassbox == "1" and entailment:
+        parser = HyperGraphParser(graph, facts)
+        parser.initialization()
+        file_name = data_path_relative.split(".")[0]
+        # parser.write_to_bash()
+        parser.write_to_file_as_json("{}.json".format(file_name))
     pr.disable()
     s = io.StringIO()
     ps = pstats.Stats(pr, stream=s).sort_stats('tottime')
@@ -92,7 +98,7 @@ if do_profile == "1":
 else:
     entailment = run()
 
-if glassbox == "1" and entailment:
+if glassbox == "1" and entailment and do_profile == "0":
     parser = HyperGraphParser(graph, facts)
     parser.initialization()
     file_name = data_path_relative.split(".")[0]
