@@ -113,7 +113,7 @@ print("Total time: ", total_time)
 
 if glassbox == "1":
     with open("trace_time.txt", "a") as f:
-        f.write(f"{nr_facts} : {total_time} : {len(graph)} : {len([*yield_dataset(D)])}\n")
+        f.write(f"{nr_facts} : {total_time} : {len(graph)} : {len([*yield_dataset(D)])} : {len(parser.edges)}\n")
 else:
     with open("time.txt", "a") as f:
         f.write(f"{nr_facts} : {total_time}\n")
