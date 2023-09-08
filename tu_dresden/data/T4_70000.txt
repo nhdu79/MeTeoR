@@ -1,5 +1,1 @@
-Scientist(ID7108)@[13,48]
-Scientist(ID4620)@[33,40]
-Scientist(ID227)@[21,51]
-Scientist(ID181)@[6,22]
-Scientist(ID36)@[31,42]
+Scientist(ID6972)@[23,25]

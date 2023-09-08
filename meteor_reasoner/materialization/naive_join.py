@@ -28,9 +28,9 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
         if global_literal_index == len(literals):
             T = []
             # dnh: For atoms in body rule
-            atoms_with_interval = defaultdict(list)
+            outermost_literals = defaultdict(list)
             # dnh: For atoms/literals in nested inside temporal operators with the first level of nesting is simply an atom
-            nested_atoms = defaultdict(list)
+            nested_literals = defaultdict(list)
             '''
             dnh: Go through all the literals in the body of the rule and apply MTL ops to literals
             '''
@@ -45,7 +45,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
 
                 # Operators are popped here
                 if graph is not None:
-                    t = apply(grounded_literal, D, atoms_with_interval=atoms_with_interval, nested_atoms=nested_atoms)
+                    t = apply(grounded_literal, D, outermost_literals=outermost_literals, nested_literals=nested_literals)
                 else:
                     t = apply(grounded_literal, D)
                 # dnh: grounded literals satisfy the body of the rule at times t
@@ -113,9 +113,9 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                 if len(T) != 0:
                     if graph is not None:
                         # Add nested rules to graph
-                        if len(nested_atoms) != 0:
+                        if len(nested_literals) != 0:
                             def do_profile_1():
-                                for lit, rs in nested_atoms.items():
+                                for lit, rs in nested_literals.items():
                                     succ = lit.__str__()
                                     for r in rs:
                                         el = {}
@@ -141,7 +141,7 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
 
                                 el["succ"] = a_succ
                                 el["rule"] = rule.__str__()
-                                for lit, intvs in atoms_with_interval.items():
+                                for lit, intvs in outermost_literals.items():
                                     # Pred
                                     for intv in intvs:
                                         # Intermediate step
@@ -170,13 +170,13 @@ def naive_join(rule, D, delta_new, D_index=None, must_literals=None, graph=None)
                         if must_literals is not None:
                             must_literals[tmp_head] += T
 
-                        nested_atoms = defaultdict(list)
-                        # T = reverse_apply(tmp_head, tmp_D, nested_atoms=nested_atoms)
+                        nested_literals = defaultdict(list)
+                        # T = reverse_apply(tmp_head, tmp_D, nested_literals=nested_literals)
                         tmp_T = copy.deepcopy(T)
-                        T = reverse_apply(tmp_head, tmp_T, nested_atoms=nested_atoms)
+                        T = reverse_apply(tmp_head, tmp_T, nested_literals=nested_literals)
                         if graph is not None:
                             def do_profile_3():
-                                for lit, rs in nested_atoms.items():
+                                for lit, rs in nested_literals.items():
                                     for intv in rs:
                                         el = {}
                                         if intv['alpha'].get_op_name() is None:

@@ -3,7 +3,7 @@ from collections import defaultdict
 import time, os, datetime
 import csv
 
-def load_dataset(file_or_path):
+def load_dataset(file_or_path, graph=None):
     """
     Read string-like facts into a dictionary object.
 
@@ -81,18 +81,27 @@ def load_dataset(file_or_path):
     else:
         raise ValueError('The input should be a file path or a list of rule string')
 
+    # TODO dnh 05/09: Current support only for txt file
     for line in lines:
         line = line.strip().replace(" ","")
         if line == "":
             continue
         try:
           predicate, entity, interval = parse_str_fact(line)
+          if graph is not None:
+              atom = Atom(predicate, entity=entity, interval=interval)
+              graph.append({
+                  "rule": "Asserted",
+                  "succ": atom.__str__(),
+                  "pred": [],
+              })
 
         except:
             continue
         if predicate not in D:
             if entity:
                D[predicate][entity] = [interval]
+
             else:
                D[predicate] = [interval]
         else:

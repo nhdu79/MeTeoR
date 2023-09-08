@@ -6,7 +6,7 @@ from meteor_reasoner.graphutil.temporal_dependency_graph import CycleFinder
 import time
 from meteor_reasoner.materialization.utils import no_new_facts, pre_calculate_threshold, entail_same_nonrecursive_predicates
 from meteor_reasoner.utils.operate_dataset import save_dataset_to_file
-
+from meteor_reasoner.utils.entail_check import entail
 
 def calculate_redundancy(delta, old):
     cnt = 0
@@ -95,7 +95,7 @@ def naive_combine(D, delta_new, D_index=None, graph=None):
     return fixpoint
 
 
-def materialize(D, rules, mode="seminaive", K=100, logger=None, must_literals=None, metrics=None, graph=None):
+def materialize(D, rules, mode="seminaive", K=100, logger=None, must_literals=None, metrics=None, graph=None, fakt=None):
     """
     The function implements the materialization operation.
     Args:
@@ -155,6 +155,8 @@ def materialize(D, rules, mode="seminaive", K=100, logger=None, must_literals=No
                         total_number += len(D[predicate][entity])
                 logger.info("Iteration={}, t={}, D={}, n={}".format(k, time.time() - start_time - calc_time, total_number, number_of_redundant_facts))
             else:
+                if fakt is not None:
+                    entail(fakt, delta_new, graph=graph)
                 fixpoint = naive_combine(D, delta_new, D_index, graph=graph)
 
         if fixpoint:

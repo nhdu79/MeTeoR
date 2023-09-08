@@ -1,0 +1,23 @@
+
+File: json_2/10000.json, Time: 4.95
+File: json_2/20000.json, Time: 20.21
+File: json_2/30000.json, Time: 43.93
+File: json_2/40000.json, Time: 74.77
+File: json_2/50000.json, Time: 126.41
+File: json_2/60000.json, Time: 178.88
+File: json_2/70000.json, Time: 259.83
+File: json_2/80000.json, Time: 330.04
+File: json_2/90000.json, Time: 385.23
+File: json_2/100000.json, Time: 534.43
+=======================================
+
+File: json_1/10000.json, Time: 3.69
+File: json_1/20000.json, Time: 14.24
+File: json_1/30000.json, Time: 32.80
+File: json_1/40000.json, Time: 51.97
+File: json_1/50000.json, Time: 93.64
+File: json_1/60000.json, Time: 130.83
+File: json_1/70000.json, Time: 156.98
+File: json_1/80000.json, Time: 215.00
+File: json_1/90000.json, Time: 289.24
+File: json_1/100000.json, Time: 381.31

@@ -2,30 +2,28 @@ from collections import defaultdict
 import json
 
 class HyperGraphParser:
-    def __init__(self, conns, facts):
+    def __init__(self, conns):
         self.conns = conns
         self.edges = []
-        self.vertices = []
-        self.facts = facts
+        self.conclusion = None
 
     def initialization(self):
-        # DATASET
-        for fact in self.facts:
-            v = generate_string_entity(entity_string=fact)
-            if v not in self.vertices:
-                self.vertices.append(v)
-            self.edges.append(([], "Asserted", v))
         # dnh 12/07: BOTTLENECK
         for conn in self.conns:
-            child = vertices_from_entity(conn['succ'])
-            parents = vertices_from_entity(conn['pred'])
             rule = conn['rule']
-            for v in child + parents:
-                if v not in self.vertices:
-                    self.vertices.append(v)
-            local_edge = (parents, rule, child[0])
-            if local_edge not in self.edges:
+            if rule == "Asserted":
+                v = conn['succ']
+                self.edges.append((conn["pred"], rule, v))
+                # Assuming that dataset does not contain duplicate facts
+            else:
+                child = vertices_from_entity(conn['succ'])
+                parents = vertices_from_entity(conn['pred'])
+                if self.conclusion is None and rule == "inclusion":
+                    self.conclusion = child[0]
                 self.edges.append((parents, rule, child[0]))
+                # local_edge = (parents, rule, child[0])
+                # if local_edge not in self.edges:
+                #     self.edges.append((parents, rule, child[0]))
 
     # Turn all edges in to string, print out all that contains "Scientist"
     def print_edges(self):
@@ -39,14 +37,14 @@ class HyperGraphParser:
         with open(file_path, 'w') as f:
             json.dump({
                 'edges': self.edges,
-                'full_vertices': self.vertices,
+                'conclusion': self.conclusion
             }, f)
 
 
     def write_to_bash(self):
         print(json.dumps({
             'edges': self.edges,
-            'full_vertices': self.vertices
+            'conclusion': self.conclusion
         }))
 
 
@@ -54,7 +52,6 @@ class HyperGraphParser:
         with open(file_path, 'r') as f:
             data = json.load(f)
             self.edges = data['edges']
-            self.vertices = data['full_vertices']
 
 
 def vertices_from_entity(entity):
@@ -93,7 +90,7 @@ def vertices_from_entity(entity):
 def generate_string_entity(alpha=None, interval=None, entity_string=None):
     if entity_string is not None:
         alpha, interval = entity_string.split('@')
-        if interval[0] != '[':
+        if interval[0] != '[' and interval[0] != '(':
             interval = f"[{interval},{interval}]"
 
     return f"{alpha}@{interval}"

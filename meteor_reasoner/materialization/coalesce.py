@@ -73,11 +73,11 @@ def coalescing_d(D, graph=None):
     """
     for predicate in D:
         for entity, old_intervals in D[predicate].items():
-                old_intervals = D[predicate][entity]
-                if len(old_intervals) == 0:
-                    continue
-                if graph is not None:
-                    new_intervals = coalescing(old_intervals, predicate=predicate, entity=entity, graph=graph)
-                else:
-                    new_intervals = coalescing(old_intervals)
-                D[predicate][entity] = new_intervals
+            old_intervals = D[predicate][entity]
+            if len(old_intervals) == 0:
+                continue
+            if graph is not None:
+                new_intervals = coalescing(old_intervals, predicate=predicate, entity=entity, graph=graph)
+            else:
+                new_intervals = coalescing(old_intervals)
+            D[predicate][entity] = new_intervals
